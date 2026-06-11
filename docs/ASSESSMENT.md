@@ -52,3 +52,14 @@ runs the runner headless; expect 10+ min extension pull).
 2. Smoke an articulated USD (e.g. a Franka USD via `discover_model` or the
    limx HU_D04 USD from humanoid-description)
 3. Commit; mcpb pack; FLEET_INDEX entry
+
+---
+
+## Update 2026-06-12 (post OpenCode pass)
+
+Pushed to GitHub (main). OpenCode added 7 Playwright fleet-audit e2e tests.
+scenes/test_cube.usda + scripts/first_launch.ps1 committed; gitignore now
+guards the 9.7 GB .venv-isaac311, jobs/, and the install log. hatchling
+packaging added. FLEET_INDEX entry added (11049/11048). **Status unchanged:
+EULA-gated** — `scripts/first_launch.ps1` remains the user step before the
+runner's first real execution.
