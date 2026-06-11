@@ -13,16 +13,21 @@
 ```powershell
 git clone https://github.com/sandraschi/isaac-mcp
 cd isaac-mcp
-uv sync
-uv run python -m isaac_mcp
+uv sync                                  # server venv (3.12)
+
+# Simulation venv: Isaac Sim 5.1 requires Python 3.11 exactly (~10 GB)
+uv venv .venv-isaac311 -p 3.11
+uv pip install "isaacsim[all,extscache]==5.1.0" --extra-index-url https://pypi.nvidia.com -p .venv-isaac311
+
+# One-time bring-up: ACCEPTS the NVIDIA Omniverse EULA, pulls extensions (10+ min)
+.\scripts\first_launch.ps1
+
+uv run python -m isaac_mcp               # run the MCP server
 ```
 
-Or use the start script:
-
-```powershell
-.\start.bat          # backend + webapp
-.\start.ps1 -Headless # backend only
-```
+The server runs on Python 3.12; simulations launch under the dedicated 3.11
+interpreter (`.venv-isaac311`, override via `ISAAC_PYTHON`). A binary Isaac Sim
+install (`ISAAC_SIM_PATH`) is auto-detected as a fallback.
 
 ---
 
@@ -75,9 +80,16 @@ Vite + React dashboard at **11048** with scene depot browser, simulation control
 
 ## Requirements
 
-- **NVIDIA GPU** with at least 8 GB VRAM (RTX 3060+)
-- **Isaac Sim** installed (2023.1+)
+- **NVIDIA GPU** with at least 8 GB VRAM (RTX 3060+); driver 580.65.06+
+- **Python 3.11** for the sim venv (Isaac Sim 5.x pip pins it exactly); 3.11–3.12 for the server
+- **Isaac Sim 5.1** via pip (see Quick Start) or a binary install (2023.1+)
 - Windows or Linux
+- First launch requires accepting the NVIDIA Omniverse EULA and pulls Kit extensions (10+ minutes)
+
+The sim runner (`src/isaac_mcp/_sim_runner.py`) implements the fleet
+file-protocol (state.json / control.json / stop.signal) and supports both the
+Isaac Sim 5.x (`isaacsim.core.api`) and 4.x (`omni.isaac.core`) namespaces.
+USD scenes only for now; URDF import is a future tool.
 
 ---
 

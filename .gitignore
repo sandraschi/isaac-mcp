@@ -8,3 +8,8 @@ node_modules/
 web_sota/dist/
 logs/
 *.log
+*.bak
+.venv-isaac311/
+jobs/
+scenes/.depot/
+isaac_install.log
