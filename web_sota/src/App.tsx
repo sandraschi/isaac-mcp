@@ -6,6 +6,7 @@ import Logging from "./pages/Logging";
 import LLM from "./pages/LLM";
 import Settings from "./pages/Settings";
 import Help from "./pages/Help";
+import FloatingChat from "./components/FloatingChat";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: "\u{1F3E0}" },
@@ -60,6 +61,7 @@ export default function App() {
             <Route path="/help" element={<Help />} />
           </Routes>
         </main>
+        <FloatingChat />
       </div>
     </BrowserRouter>
   );

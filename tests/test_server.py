@@ -6,9 +6,9 @@ from typing import Any
 import pytest
 
 from isaac_mcp.server import (
-    sim_status,
-    list_scenes,
     list_jobs,
+    list_scenes,
+    sim_status,
 )
 
 
@@ -46,9 +46,14 @@ class TestSimStatus:
     def test_sim_status_keys(self):
         result = sim_status()
         expected_keys = {
-            "isaac_available", "isaac_version", "isaac_python",
-            "gpus", "scenes_dir_exists", "scenes_in_depot",
-            "active_jobs", "jobs_dir_exists",
+            "isaac_available",
+            "isaac_version",
+            "isaac_python",
+            "gpus",
+            "scenes_dir_exists",
+            "scenes_in_depot",
+            "active_jobs",
+            "jobs_dir_exists",
         }
         assert expected_keys.issubset(result.keys())
 
@@ -77,12 +82,13 @@ class TestListJobs:
 class TestLoadScene:
     def test_load_scene_file_not_found(self, empty_depot):
         from isaac_mcp.server import load_scene
+
         result = load_scene(uri="/nonexistent/file.usd", name="test_scene")
         assert result["success"] is False
         assert "error" in result
 
     def test_load_scene_success(self, empty_depot, tmp_path):
-        from isaac_mcp.server import load_scene, list_scenes
+        from isaac_mcp.server import list_scenes, load_scene
 
         scene_file = tmp_path / "test.usd"
         scene_file.write_text("#usda 1.0\n()")
@@ -98,6 +104,7 @@ class TestLoadScene:
 class TestSpawnModel:
     def test_spawn_model_no_scene(self, empty_depot):
         from isaac_mcp.server import spawn_model
+
         result = spawn_model(uri="http://example.com/model.usd", name="bot")
         assert result["success"] is False
 
@@ -105,12 +112,14 @@ class TestSpawnModel:
 class TestStartStopSim:
     def test_start_sim_no_such_scene(self, empty_depot):
         from isaac_mcp.server import start_sim
+
         result = start_sim(scene_name="nonexistent", headless=True)
         assert result["success"] is False
         assert "error" in result
 
     def test_stop_sim_unknown_job(self, empty_depot):
         from isaac_mcp.server import stop_sim
+
         result = stop_sim(job_id="bad_job_id")
         assert result["success"] is False
 
@@ -118,6 +127,7 @@ class TestStartStopSim:
 class TestApplyControl:
     def test_apply_control_unknown_job(self, empty_depot):
         from isaac_mcp.server import apply_control
+
         result = apply_control(job_id="bad_job_id", ctrl={"joint1": 0.5})
         assert result["success"] is False
 
@@ -125,6 +135,7 @@ class TestApplyControl:
 class TestGetState:
     def test_get_state_unknown_job(self, empty_depot):
         from isaac_mcp.server import get_state
+
         result = get_state(job_id="bad_job_id")
         assert result["success"] is False
 
@@ -133,6 +144,7 @@ class TestAiTools:
     @pytest.mark.asyncio
     async def test_agentic_workflow_ollama_fallback(self, empty_depot):
         from isaac_mcp.server import agentic_sim_workflow
+
         result = await agentic_sim_workflow(goal="test", ctx=None)
         assert result["success"] is False
         assert "message" in result
@@ -140,23 +152,27 @@ class TestAiTools:
     @pytest.mark.asyncio
     async def test_discover_model_no_llm(self, empty_depot):
         from isaac_mcp.server import discover_model
+
         result = await discover_model(description="test", ctx=None)
         assert "success" in result
 
     @pytest.mark.asyncio
     async def test_nl_control_unknown_job(self, empty_depot):
         from isaac_mcp.server import natural_language_control
+
         result = await natural_language_control(prompt="test", job_id="bad_id", ctx=None)
         assert result["success"] is False
 
     @pytest.mark.asyncio
     async def test_analyze_state_unknown_job(self, empty_depot):
         from isaac_mcp.server import analyze_sim_state
+
         result = await analyze_sim_state(job_id="bad_id", ctx=None)
         assert result["success"] is False
 
     @pytest.mark.asyncio
     async def test_analyze_logs_unknown_job(self, empty_depot):
         from isaac_mcp.server import analyze_sim_logs
+
         result = await analyze_sim_logs(job_id="bad_id", ctx=None)
         assert result["success"] is True  # No errors = success

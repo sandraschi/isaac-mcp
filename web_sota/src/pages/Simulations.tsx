@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { API_BASE } from "../lib/api";
 
 interface Job {
   job_id: string;
@@ -13,7 +14,7 @@ export default function Simulations() {
 
   const fetchJobs = async () => {
     try {
-      const r = await fetch("/api/simulations");
+      const r = await fetch(API_BASE + "/api/simulations");
       if (r.ok) {
         const data = await r.json();
         setJobs([...(data.active || []), ...(data.completed || [])]);
@@ -25,7 +26,7 @@ export default function Simulations() {
 
   const handleStart = async () => {
     if (!sceneName) return;
-    await fetch("/api/jobs/start", {
+    await fetch(API_BASE + "/api/jobs/start", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ scene_name: sceneName }),
@@ -34,7 +35,7 @@ export default function Simulations() {
   };
 
   const handleStop = async (jobId: string) => {
-    await fetch(`/api/jobs/${jobId}/stop`, { method: "POST" });
+    await fetch(`${API_BASE}/api/jobs/${jobId}/stop`, { method: "POST" });
     fetchJobs();
   };
 

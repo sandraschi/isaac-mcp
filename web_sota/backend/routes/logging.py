@@ -47,7 +47,7 @@ async def logs_export(
 ):
     log = getattr(request.app.state, "activity_log", None)
     if log is None:
-        return PlainTextContent("[]", media_type="application/json")
+        return PlainTextResponse("[]", media_type="application/json")
     content = log.export(format=format, level=level, kind=kind, search=search)
     media = "text/csv" if format == "csv" else "application/json"
     filename = f"logs.{format}"

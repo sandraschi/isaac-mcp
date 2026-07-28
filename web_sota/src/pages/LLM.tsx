@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { API_BASE } from "../lib/api";
 
 export default function LLM() {
   const [prompt, setPrompt] = useState("");
@@ -13,7 +14,7 @@ export default function LLM() {
     setSelectedProvider(savedProvider);
     setSelectedModel(savedModel);
 
-    fetch("/api/llm/providers")
+    fetch(API_BASE + "/api/llm/providers")
       .then((r) => r.json())
       .then((d) => {
         setProviders(d);
@@ -45,7 +46,7 @@ export default function LLM() {
     if (!prompt) return;
     setResponse("Thinking...");
     try {
-      const r = await fetch("/api/llm/chat", {
+      const r = await fetch(API_BASE + "/api/llm/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ provider: selectedProvider, model: selectedModel, prompt }),

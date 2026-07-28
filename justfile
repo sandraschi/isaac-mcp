@@ -1,4 +1,9 @@
+set windows-shell := ["powershell.exe", "-NoProfile", "-Command"]
+
+import 'scripts/just/fleet.just'
+
 # === Fleet-standard ===
+    uv run python -c "from pathlib import Path; p = Path('scenes'); print('Scenes:', [f.name for f in p.glob('*.usd')]) if p.exists() else print('no scenes dir')"
 bootstrap:
     uv sync
 
@@ -18,20 +23,17 @@ e2e:
     cd web_sota && npx playwright test
 
 web:
-    pwsh -NoProfile -File ./web_sota/start.ps1
-
-mcpb-pack:
-    pwsh -NoProfile -File ./mcpb/pack.ps1
+    powershell.exe -NoProfile -File ./web_sota/start.ps1
 
 clean:
-    pwsh -NoProfile -c "Remove-Item -Recurse -Force -Path dist,.venv,__pycache__ -ErrorAction SilentlyContinue"
+    powershell.exe -NoProfile -c "Remove-Item -Recurse -Force -Path dist,.venv,__pycache__ -ErrorAction SilentlyContinue"
 
 # === Repo-specific ===
 gpu-info:
-    pwsh -NoProfile -c "if (Get-Command nvidia-smi -ErrorAction SilentlyContinue) { nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv } else { Write-Host 'No NVIDIA GPU detected' }"
+    powershell.exe -NoProfile -c "if (Get-Command nvidia-smi -ErrorAction SilentlyContinue) { nvidia-smi --query-gpu=name,memory.total,driver_version --format=csv } else { Write-Host 'No NVIDIA GPU detected' }"
 
 check-isaac:
-    pwsh -NoProfile -c "try { & 'C:\Program Files\NVIDIA Corporation\Isaac Sim\python.bat' -c 'import omni.isaac.core; print(\"Isaac Sim OK\")' 2>&1 } catch { Write-Host 'Isaac Sim not found' }"
+    powershell.exe -NoProfile -c "try { & 'C:\Program Files\NVIDIA Corporation\Isaac Sim\python.bat' -c 'import omni.isaac.core; print(\"Isaac Sim OK\")' 2>&1 } catch { Write-Host 'Isaac Sim not found' }"
 
 scenes:
     uv run python -c "from pathlib import Path; p = Path('scenes'); print('Scenes:', [f.name for f in p.glob('*.usd')]) if p.exists() else print('no scenes dir')"

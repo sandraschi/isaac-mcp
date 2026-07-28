@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { API_BASE } from "../lib/api";
 
 interface Scene {
   [key: string]: { uri: string; path: string; size_kb: number; format: string };
@@ -11,7 +12,7 @@ export default function Models() {
 
   const fetchScenes = async () => {
     try {
-      const r = await fetch("/api/scenes");
+      const r = await fetch(API_BASE + "/api/scenes");
       if (r.ok) {
         const data = await r.json();
         setScenes(data.scenes || {});
@@ -23,7 +24,7 @@ export default function Models() {
 
   const handleLoad = async () => {
     if (!uri || !name) return;
-    await fetch("/api/scenes/load", {
+    await fetch(API_BASE + "/api/scenes/load", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ uri, name }),

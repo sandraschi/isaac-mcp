@@ -87,7 +87,7 @@ async def llm_chat(body: dict):
 
 # Mount MCP HTTP
 mcp_mod = __import__("isaac_mcp.server", fromlist=["mcp"])
-app.mount("/mcp", mcp_mod.mcp.http_app())
+app.mount("/mcp", mcp_mod.mcp.http_app(path="/"))
 
 # Serve frontend static files (if dist exists)
 dist = Path(__file__).resolve().parent.parent / "dist"

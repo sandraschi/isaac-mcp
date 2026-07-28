@@ -23,10 +23,7 @@ DEPOT_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 _jobs: dict = {}
 
-ISAAC_SIM_PATH = Path(os.environ.get(
-    "ISAAC_SIM_PATH",
-    "C:/Program Files/NVIDIA/Isaac Sim"
-))
+ISAAC_SIM_PATH = Path(os.environ.get("ISAAC_SIM_PATH", "C:/Program Files/NVIDIA/Isaac Sim"))
 
 
 def _find_isaac_python() -> Path | None:
@@ -51,6 +48,7 @@ def _find_isaac_python() -> Path | None:
         if c.exists():
             return c
     from glob import glob
+
     for p in glob(str(Path.home() / ".local/share/ov/pkg/isaac_sim-*/python.sh")):
         return Path(p)
     return None
@@ -63,7 +61,9 @@ def _isaac_version() -> str | None:
     try:
         r = subprocess.run(
             [str(py), "-c", "import omni.isaac.core; print(omni.isaac.core.__version__)"],
-            capture_output=True, text=True, timeout=30
+            capture_output=True,
+            text=True,
+            timeout=30,
         )
         return r.stdout.strip() or "unknown"
     except Exception:
@@ -73,9 +73,10 @@ def _isaac_version() -> str | None:
 def _gpu_info() -> list:
     try:
         r = subprocess.run(
-            ["nvidia-smi", "--query-gpu=name,memory.total,driver_version",
-             "--format=csv,noheader"],
-            capture_output=True, text=True, timeout=15
+            ["nvidia-smi", "--query-gpu=name,memory.total,driver_version", "--format=csv,noheader"],
+            capture_output=True,
+            text=True,
+            timeout=15,
         )
         if r.returncode == 0:
             return [line.strip() for line in r.stdout.strip().split("\n") if line.strip()]
@@ -106,6 +107,7 @@ def sim_status() -> dict:
     omni_ok = False
     try:
         import omni.isaac.core  # noqa: F401
+
         omni_ok = True
     except ImportError:
         pass
@@ -122,8 +124,7 @@ def sim_status() -> dict:
         "scenes_dir_exists": SCENES_DIR.exists(),
         "scenes_in_depot": len(_load_depot()),
         "active_jobs": sum(
-            1 for j in _jobs.values()
-            if j.get("process") and j["process"].poll() is None
+            1 for j in _jobs.values() if j.get("process") and j["process"].poll() is None
         ),
         "jobs_dir_exists": JOBS_DIR.exists(),
     }
@@ -213,7 +214,10 @@ def start_sim(scene_name: str, headless: bool = True) -> dict:
 
     isaac_py = _find_isaac_python()
     if not isaac_py:
-        return {"success": False, "error": "Isaac Sim Python not found. Install Isaac Sim or set ISAAC_SIM_PATH."}
+        return {
+            "success": False,
+            "error": "Isaac Sim Python not found. Install Isaac Sim or set ISAAC_SIM_PATH.",
+        }
 
     runner = Path(__file__).parent / "_sim_runner.py"
     if not runner.exists():
@@ -224,10 +228,14 @@ def start_sim(scene_name: str, headless: bool = True) -> dict:
     job_dir.mkdir(parents=True, exist_ok=True)
 
     cmd = [
-        str(isaac_py), str(runner),
-        "--scene-path", depot[scene_name]["path"],
-        "--job-id", job_id,
-        "--jobs-dir", str(JOBS_DIR),
+        str(isaac_py),
+        str(runner),
+        "--scene-path",
+        depot[scene_name]["path"],
+        "--job-id",
+        job_id,
+        "--jobs-dir",
+        str(JOBS_DIR),
     ]
     if headless:
         cmd.append("--headless")
@@ -255,7 +263,11 @@ def start_sim(scene_name: str, headless: bool = True) -> dict:
             break
         if proc.poll() is not None:
             tail = log_path.read_text(encoding="utf-8", errors="replace").splitlines()[-15:]
-            return {"success": False, "error": f"Runner exited immediately ({proc.returncode}).", "log_tail": tail}
+            return {
+                "success": False,
+                "error": f"Runner exited immediately ({proc.returncode}).",
+                "log_tail": tail,
+            }
         time.sleep(0.25)
 
     return {
@@ -264,7 +276,9 @@ def start_sim(scene_name: str, headless: bool = True) -> dict:
         "scene_name": scene_name,
         "headless": headless,
         "scene_loaded": loaded,
-        "note": None if loaded else "Isaac still starting (first launch pulls extensions, 10+ min); poll get_state or list_jobs.",
+        "note": None
+        if loaded
+        else "Isaac still starting (first launch pulls extensions, 10+ min); poll get_state or list_jobs.",
     }
 
 
@@ -343,11 +357,13 @@ def list_jobs() -> dict:
         if meta_path.exists():
             meta = json.loads(meta_path.read_text())
             scene_name = Path(meta.get("scene_path", "")).stem
-            completed.append({
-                "job_id": job_dir.name,
-                "scene_name": scene_name,
-                "completed": (job_dir / "completed.txt").exists(),
-            })
+            completed.append(
+                {
+                    "job_id": job_dir.name,
+                    "scene_name": scene_name,
+                    "completed": (job_dir / "completed.txt").exists(),
+                }
+            )
 
     return {
         "success": True,
@@ -367,7 +383,7 @@ def _job_dir_for(job_id: str) -> Path:
 
 
 def _extract_json(text: str) -> dict | None:
-    for m in re.finditer(r'\{[^{}]*\}', text):
+    for m in re.finditer(r"\{[^{}]*\}", text):
         try:
             return json.loads(m.group())
         except json.JSONDecodeError:
@@ -376,7 +392,7 @@ def _extract_json(text: str) -> dict | None:
 
 
 def _extract_json_array(text: str) -> list:
-    for m in re.finditer(r'\[.*?\]', text, re.DOTALL):
+    for m in re.finditer(r"\[.*?\]", text, re.DOTALL):
         try:
             return json.loads(m.group())
         except json.JSONDecodeError:
@@ -430,7 +446,12 @@ After completion, summarize what happened and any observations."""
     try:
         result = await ctx.sample(prompt)
         text = getattr(result, "text", None) or str(result)
-        return {"success": True, "message": "Workflow completed.", "plan_and_result": text.strip(), "sampling_used": True}
+        return {
+            "success": True,
+            "message": "Workflow completed.",
+            "plan_and_result": text.strip(),
+            "sampling_used": True,
+        }
     except Exception as e:
         try:
             resp = httpx.post(
@@ -438,9 +459,18 @@ After completion, summarize what happened and any observations."""
                 json={"model": "llama3.2:3b", "prompt": prompt, "stream": False},
                 timeout=120,
             )
-            return {"success": True, "message": "Workflow completed (Ollama).", "plan_and_result": resp.json().get("response", ""), "sampling_used": False, "model": "ollama"}
+            return {
+                "success": True,
+                "message": "Workflow completed (Ollama).",
+                "plan_and_result": resp.json().get("response", ""),
+                "sampling_used": False,
+                "model": "ollama",
+            }
         except Exception as ollama_e:
-            return {"success": False, "message": f"Both sampling and Ollama fallback failed: {e}; {ollama_e}"}
+            return {
+                "success": False,
+                "message": f"Both sampling and Ollama fallback failed: {e}; {ollama_e}",
+            }
 
 
 @mcp.tool()
@@ -494,12 +524,21 @@ Example: {{"shoulder_joint": 0.5, "elbow_joint": -0.3}}"""
 
     ctrl = _extract_json(text)
     if not ctrl:
-        return {"success": False, "message": "Could not parse LLM output as actuator commands.", "raw_llm_output": text}
+        return {
+            "success": False,
+            "message": "Could not parse LLM output as actuator commands.",
+            "raw_llm_output": text,
+        }
 
     if job_dir.exists():
         (job_dir / "control.json").write_text(json.dumps(ctrl))
 
-    return {"success": True, "message": f"Generated {len(ctrl)} actuator commands.", "controls": ctrl, "source": "sampling" if sampling_used else "ollama"}
+    return {
+        "success": True,
+        "message": f"Generated {len(ctrl)} actuator commands.",
+        "controls": ctrl,
+        "source": "sampling" if sampling_used else "ollama",
+    }
 
 
 @mcp.tool()
@@ -541,7 +580,12 @@ Describe in plain English:
     try:
         result = await ctx.sample(analyze_prompt)
         text = getattr(result, "text", None) or str(result)
-        return {"success": True, "message": "State analyzed.", "analysis": text.strip(), "sampling_used": True}
+        return {
+            "success": True,
+            "message": "State analyzed.",
+            "analysis": text.strip(),
+            "sampling_used": True,
+        }
     except Exception:
         try:
             resp = httpx.post(
@@ -549,7 +593,12 @@ Describe in plain English:
                 json={"model": "llama3.2:3b", "prompt": analyze_prompt, "stream": False},
                 timeout=30,
             )
-            return {"success": True, "message": "State analyzed (Ollama).", "analysis": resp.json().get("response", ""), "sampling_used": False}
+            return {
+                "success": True,
+                "message": "State analyzed (Ollama).",
+                "analysis": resp.json().get("response", ""),
+                "sampling_used": False,
+            }
         except Exception as e:
             return {"success": False, "message": f"LLM unavailable: {e}"}
 
@@ -588,8 +637,11 @@ async def analyze_sim_logs(job_id: str, ctx: Context) -> dict:
         log_sources.append(f"=== runner.log (tail) ===\n{stderr_text[-4000:]}")
     if not log_sources:
         completed = (job_dir / "completed.txt").exists()
-        return {"success": True, "message": "No errors in log output.",
-                "analysis": f"Job {job_id}: {'completed normally' if completed else 'still running or unknown'}. No error logs found."}
+        return {
+            "success": True,
+            "message": "No errors in log output.",
+            "analysis": f"Job {job_id}: {'completed normally' if completed else 'still running or unknown'}. No error logs found.",
+        }
 
     combined = "\n\n".join(log_sources)
 
@@ -607,7 +659,12 @@ Provide:
     try:
         result = await ctx.sample(log_prompt)
         text = getattr(result, "text", None) or str(result)
-        return {"success": True, "message": "Logs analyzed.", "analysis": text.strip(), "sampling_used": True}
+        return {
+            "success": True,
+            "message": "Logs analyzed.",
+            "analysis": text.strip(),
+            "sampling_used": True,
+        }
     except Exception:
         try:
             resp = httpx.post(
@@ -615,7 +672,12 @@ Provide:
                 json={"model": "llama3.2:3b", "prompt": log_prompt, "stream": False},
                 timeout=30,
             )
-            return {"success": True, "message": "Logs analyzed (Ollama).", "analysis": resp.json().get("response", ""), "sampling_used": False}
+            return {
+                "success": True,
+                "message": "Logs analyzed (Ollama).",
+                "analysis": resp.json().get("response", ""),
+                "sampling_used": False,
+            }
         except Exception as e:
             return {"success": False, "message": f"LLM unavailable: {e}"}
 
@@ -670,7 +732,12 @@ Example: ["https://raw.githubusercontent.com/NVIDIA-Omniverse/IsaacSim-omni.isaa
                 dest.write_bytes(resp.content)
                 size_kb = round(dest.stat().st_size / 1024, 1)
                 depot = _load_depot()
-                depot[name] = {"uri": url, "path": str(dest.resolve()), "size_kb": size_kb, "format": ext}
+                depot[name] = {
+                    "uri": url,
+                    "path": str(dest.resolve()),
+                    "size_kb": size_kb,
+                    "format": ext,
+                }
                 _save_depot(depot)
                 loaded.append({"url": url, "name": name, "path": str(dest), "size_kb": size_kb})
         except Exception:
@@ -678,7 +745,9 @@ Example: ["https://raw.githubusercontent.com/NVIDIA-Omniverse/IsaacSim-omni.isaa
 
     return {
         "success": len(loaded) > 0,
-        "message": f"Loaded {len(loaded)}/{len(urls)} models." if loaded else "No models could be downloaded.",
+        "message": f"Loaded {len(loaded)}/{len(urls)} models."
+        if loaded
+        else "No models could be downloaded.",
         "models_loaded": loaded,
         "urls_tried": urls,
     }

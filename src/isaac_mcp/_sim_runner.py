@@ -106,14 +106,17 @@ def main() -> None:
             except Exception:
                 joint_names = []
 
-        _write_json(job_dir / "metadata.json", {
-            "scene_path": scene_path,
-            "headless": args.headless,
-            "physics_dt": args.physics_dt,
-            "articulation_root": art_root,
-            "actuator_names": joint_names,
-            "num_dof": len(joint_names),
-        })
+        _write_json(
+            job_dir / "metadata.json",
+            {
+                "scene_path": scene_path,
+                "headless": args.headless,
+                "physics_dt": args.physics_dt,
+                "articulation_root": art_root,
+                "actuator_names": joint_names,
+                "num_dof": len(joint_names),
+            },
+        )
 
         def write_state() -> None:
             qpos: list = []
@@ -123,18 +126,25 @@ def main() -> None:
                     p = articulation.get_joint_positions()
                     v = articulation.get_joint_velocities()
                     # 5.x returns (count, dof) arrays for view prims; flatten first env
-                    qpos = (p[0] if getattr(p, "ndim", 1) > 1 else p).tolist() if p is not None else []
-                    qvel = (v[0] if getattr(v, "ndim", 1) > 1 else v).tolist() if v is not None else []
+                    qpos = (
+                        (p[0] if getattr(p, "ndim", 1) > 1 else p).tolist() if p is not None else []
+                    )
+                    qvel = (
+                        (v[0] if getattr(v, "ndim", 1) > 1 else v).tolist() if v is not None else []
+                    )
                 except Exception:
                     pass
-            _write_json(state_path, {
-                "time": float(world.current_time),
-                "step": step,
-                "qpos": qpos,
-                "qvel": qvel,
-                "actuator_values": dict(zip(joint_names, qpos)),
-                "sensor_readings": {},
-            })
+            _write_json(
+                state_path,
+                {
+                    "time": float(world.current_time),
+                    "step": step,
+                    "qpos": qpos,
+                    "qvel": qvel,
+                    "actuator_values": dict(zip(joint_names, qpos, strict=False)),
+                    "sensor_readings": {},
+                },
+            )
 
         write_state()
 
@@ -151,12 +161,18 @@ def main() -> None:
                     targets = None
                     try:
                         cur = articulation.get_joint_positions()
-                        targets = np.array(cur[0] if getattr(cur, "ndim", 1) > 1 else cur, dtype=float)
+                        targets = np.array(
+                            cur[0] if getattr(cur, "ndim", 1) > 1 else cur, dtype=float
+                        )
                     except Exception:
                         targets = np.zeros(len(joint_names))
                     for key, val in cmds.items():
-                        idx = joint_names.index(key) if key in joint_names else (
-                            int(key) if key.isdigit() and int(key) < len(joint_names) else None
+                        idx = (
+                            joint_names.index(key)
+                            if key in joint_names
+                            else (
+                                int(key) if key.isdigit() and int(key) < len(joint_names) else None
+                            )
                         )
                         if idx is not None:
                             targets[idx] = float(val)
@@ -179,7 +195,9 @@ def main() -> None:
         (job_dir / "error.txt").write_text(traceback.format_exc())
         raise
     finally:
-        (job_dir / "completed.txt").write_text(f"completed at step {step} ({time.strftime('%Y-%m-%d %H:%M:%S')})")
+        (job_dir / "completed.txt").write_text(
+            f"completed at step {step} ({time.strftime('%Y-%m-%d %H:%M:%S')})"
+        )
         if sim_app is not None:
             try:
                 sim_app.close()

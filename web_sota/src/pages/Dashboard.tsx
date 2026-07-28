@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { API_BASE } from "../lib/api";
 
 interface Status {
   isaac_available: boolean;
@@ -23,14 +24,14 @@ export default function Dashboard() {
 
   const fetchStatus = useCallback(async () => {
     try {
-      const r = await fetch("/api/status");
+      const r = await fetch(API_BASE + "/api/status");
       if (r.ok) setStatus(await r.json());
     } catch {}
   }, []);
 
   const fetchJobs = useCallback(async () => {
     try {
-      const r = await fetch("/api/simulations");
+      const r = await fetch(API_BASE + "/api/simulations");
       if (r.ok) {
         const data = await r.json();
         setJobs([...(data.active || []), ...(data.completed || [])]);
@@ -48,7 +49,7 @@ export default function Dashboard() {
   const handleAiExecute = async () => {
     setAiResult("Thinking...");
     try {
-      const r = await fetch("/api/llm/chat", {
+      const r = await fetch(API_BASE + "/api/llm/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
