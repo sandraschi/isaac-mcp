@@ -3,7 +3,6 @@ set windows-shell := ["powershell.exe", "-NoProfile", "-Command"]
 import 'scripts/just/fleet.just'
 
 # === Fleet-standard ===
-    uv run python -c "from pathlib import Path; p = Path('scenes'); print('Scenes:', [f.name for f in p.glob('*.usd')]) if p.exists() else print('no scenes dir')"
 bootstrap:
     uv sync
 

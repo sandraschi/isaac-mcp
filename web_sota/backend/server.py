@@ -10,10 +10,10 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 
-from isaac_mcp.server import sim_status, list_scenes, list_jobs
+from isaac_mcp.server import list_jobs, list_scenes, sim_status
+from web_sota.backend.log_buffer import activity_log
 from web_sota.backend.routes.ai import router as ai_router
 from web_sota.backend.routes.logging import router as logging_router
-from web_sota.backend.log_buffer import activity_log
 
 
 @asynccontextmanager
