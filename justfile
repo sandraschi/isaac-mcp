@@ -11,10 +11,10 @@ serve:
     uv run python -m isaac_mcp
 
 lint:
-    ruff check src/ web_sota/backend/
+    uv run ruff check src/ web_sota/backend/
 
 fix:
-    ruff check --fix src/ web_sota/backend/
+    uv run ruff check --fix src/ web_sota/backend/
 
 test:
     uv run pytest tests/ -q
@@ -37,3 +37,5 @@ check-isaac:
 
 scenes:
     uv run python -c "from pathlib import Path; p = Path('scenes'); print('Scenes:', [f.name for f in p.glob('*.usd')]) if p.exists() else print('no scenes dir')"
+
+# Bootstrap: install dev deps + pre-commit hook
