@@ -1,4 +1,4 @@
-# first_launch.ps1 — one-time Isaac Sim bring-up for isaac-mcp.
+# first_launch.ps1 - one-time Isaac Sim bring-up for isaac-mcp.
 #
 # Running this script ACCEPTS the NVIDIA Omniverse License Agreement
 # (https://docs.omniverse.nvidia.com/platform/latest/common/NVIDIA_Omniverse_License_Agreement.html)
@@ -21,7 +21,7 @@ $depot["test_cube"] = @{ uri = "builtin"; path = "$repo\scenes\test_cube.usda"; 
 $depot | ConvertTo-Json -Depth 4 | Set-Content $registry
 
 Write-Host "Launching Isaac Sim runner (headless) against test_cube.usda ..."
-Write-Host "First run pulls extensions — expect 10+ minutes. Log: $repo\jobs\firstlaunch\runner.log"
+Write-Host "First run pulls extensions - expect 10+ minutes. Log: $repo\jobs\firstlaunch\runner.log"
 New-Item -ItemType Directory -Path "$repo\jobs\firstlaunch" -Force | Out-Null
 
 & "$repo\.venv-isaac311\Scripts\python.exe" "$repo\src\isaac_mcp\_sim_runner.py" `
