@@ -243,7 +243,7 @@ def start_sim(scene_name: str, headless: bool = True) -> dict:
     # Log to file, never PIPE: undrained pipes deadlock chatty sims, and
     # Isaac's first launch (extension pull) can write a LOT.
     log_path = job_dir / "runner.log"
-    log_fh = open(log_path, "w", encoding="utf-8")  # noqa: SIM115 — owned by child
+    log_fh = open(log_path, "w", encoding="utf-8")  # noqa: SIM115 - owned by child
     proc = subprocess.Popen(cmd, stdout=log_fh, stderr=subprocess.STDOUT)
 
     _jobs[job_id] = {
@@ -422,19 +422,19 @@ async def agentic_sim_workflow(goal: str, ctx: Context) -> dict:
     """
     tools_desc = """
 Available tools (invoke with JSON):
-- sim_status() — health check (GPU, Isaac availability)
-- load_scene(uri, name) — download USD/URDF scene
-- spawn_model(uri, name, scene) — spawn a model into a scene
-- start_sim(scene_name, headless) — launch Isaac Sim, returns job_id
-- stop_sim(job_id) — stop sim
-- get_state(job_id) — read joint positions/velocities
-- apply_control(job_id, ctrl) — set actuator controls
-- list_scenes() — show depot scenes
-- list_jobs() — show active/completed jobs
-- natural_language_control(prompt, job_id, ctx) — NL to actuator values
-- analyze_sim_state(job_id, ctx) — describe robot posture
-- analyze_sim_logs(job_id, ctx) — diagnose sim issues
-- discover_model(description, ctx) — find + load USD/URDF from GitHub
+- sim_status() - health check (GPU, Isaac availability)
+- load_scene(uri, name) - download USD/URDF scene
+- spawn_model(uri, name, scene) - spawn a model into a scene
+- start_sim(scene_name, headless) - launch Isaac Sim, returns job_id
+- stop_sim(job_id) - stop sim
+- get_state(job_id) - read joint positions/velocities
+- apply_control(job_id, ctrl) - set actuator controls
+- list_scenes() - show depot scenes
+- list_jobs() - show active/completed jobs
+- natural_language_control(prompt, job_id, ctx) - NL to actuator values
+- analyze_sim_state(job_id, ctx) - describe robot posture
+- analyze_sim_logs(job_id, ctx) - diagnose sim issues
+- discover_model(description, ctx) - find + load USD/URDF from GitHub
 """
     prompt = f"""You are a robotics simulation engineer using NVIDIA Isaac Sim. Your goal: {goal}
 

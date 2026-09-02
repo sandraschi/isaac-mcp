@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased] — 2026-09-02
+
+### Added
+- Registered the real Nori A3 URDF (`norirobotics-mcp/models/nori_description/urdf/
+  nori.expanded.absolute.urdf` — vendored from Nori Robotics' own `nori_description` repo,
+  expanded from xacro with absolute mesh paths) as `nori_a3` in the scene depot via
+  `load_scene`. Not yet loaded/rendered in Isaac Sim itself — no GPU-equipped Isaac install
+  was available to verify against this pass; the file is real and staged, verified loading
+  correctly in MuJoCo (see `robotics-mcp`/`mujoco-mcp` CHANGELOGs), not yet Isaac-verified.
+
 ## 0.2.0-alpha (2026-06-11)
 
 - Initial release: 14 MCP tools (9 sim + 5 AI)

@@ -1,21 +1,21 @@
 """Isaac Sim subprocess runner for isaac-mcp.
 
 Implements the fleet file-protocol contract (same as mujoco-mcp/_sim_runner.py):
-  jobs/{job_id}/metadata.json   — written once after scene load
-  jobs/{job_id}/state.json      — joint positions/velocities, refreshed continuously
-  jobs/{job_id}/control.json    — consumed and deleted each loop iteration
-  jobs/{job_id}/stop.signal     — touch to request shutdown
-  jobs/{job_id}/completed.txt   — written on clean exit
-  jobs/{job_id}/error.txt       — written on crash
+  jobs/{job_id}/metadata.json   - written once after scene load
+  jobs/{job_id}/state.json      - joint positions/velocities, refreshed continuously
+  jobs/{job_id}/control.json    - consumed and deleted each loop iteration
+  jobs/{job_id}/stop.signal     - touch to request shutdown
+  jobs/{job_id}/completed.txt   - written on clean exit
+  jobs/{job_id}/error.txt       - written on crash
 
 MUST run under the Isaac Sim Python environment (Python 3.11 for Isaac Sim 5.x;
 pip: `pip install "isaacsim[all,extscache]==5.1.0" --extra-index-url https://pypi.nvidia.com`
 or the binary install's python.bat). The MCP server itself runs on a normal
-Python and only launches this script — see server._find_isaac_python().
+Python and only launches this script - see server._find_isaac_python().
 
 API namespaces: Isaac Sim 5.x uses `isaacsim.core.api`; 4.x used
 `omni.isaac.core`. Both are tried. SimulationApp must be created BEFORE any
-other isaacsim/omni import — that is why imports below are deferred.
+other isaacsim/omni import - that is why imports below are deferred.
 """
 
 import argparse

@@ -38,7 +38,7 @@ if ($BackendOnly) {
 
 Write-Host "==> Starting frontend on port $FrontendPort..." -ForegroundColor Cyan
 $WebRoot = Join-Path $ScriptRoot "."
-Start-Process -NoNewWindow -FilePath "npx" -ArgumentList "vite --port $FrontendPort --host" -WorkingDirectory $WebRoot
+Start-Process -NoNewWindow -FilePath "cmd.exe" -ArgumentList "/c","npx vite --port $FrontendPort --host" -WorkingDirectory $WebRoot
 
 Start-Sleep 3
 
