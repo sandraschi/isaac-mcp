@@ -19,7 +19,7 @@ test:
     uv run pytest tests/ -q
 
 e2e:
-    cd web_sota && npx playwright test
+    cd web_sota; npx playwright test
 
 web:
     powershell.exe -NoProfile -File ./web_sota/start.ps1
