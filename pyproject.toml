@@ -9,7 +9,9 @@ dependencies = ["fastmcp>=3.4.4,<4", "mujoco>=3.2", "httpx>=0.28", "fastapi>=0.1
 isaac-mcp = "isaac_mcp:main"
 
 [dependency-groups]
-dev = ["pytest>=8", "pytest-asyncio>=0.24", "pytest-mock>=3", "httpx>=0.28"]
+# NOTE: [project.optional-dependencies] dev is kept for CI (`uv sync --extra dev`);
+# local `uv sync` uses this group - keep both lists in sync.
+dev = ["pytest>=8", "pytest-asyncio>=0.24", "pytest-mock>=3", "httpx>=0.28", "ruff>=0.16.0,<0.17", "pyright>=1.1.390"]
 
 [build-system]
 requires = ["hatchling"]

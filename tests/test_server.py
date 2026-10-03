@@ -142,9 +142,17 @@ class TestGetState:
 
 class TestAiTools:
     @pytest.mark.asyncio
-    async def test_agentic_workflow_ollama_fallback(self, empty_depot):
+    async def test_agentic_workflow_ollama_fallback(self, empty_depot, monkeypatch):
         from isaac_mcp.server import agentic_sim_workflow
 
+        # Hermetic: force the Ollama fallback to fail regardless of whether a
+        # real Ollama is running on this machine (it is on Goliath).
+        import httpx
+
+        def _refuse(*args, **kwargs):
+            raise httpx.ConnectError("test hermetic: no llm available")
+
+        monkeypatch.setattr(httpx, "post", _refuse)
         result = await agentic_sim_workflow(goal="test", ctx=None)
         assert result["success"] is False
         assert "message" in result
