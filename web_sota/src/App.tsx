@@ -1,12 +1,12 @@
-import { BrowserRouter, Routes, Route, NavLink } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
-import Simulations from "./pages/Simulations";
-import Models from "./pages/Models";
-import Logging from "./pages/Logging";
-import LLM from "./pages/LLM";
-import Settings from "./pages/Settings";
-import Help from "./pages/Help";
+import { BrowserRouter, NavLink, Route, Routes } from "react-router-dom";
 import FloatingChat from "./components/FloatingChat";
+import Dashboard from "./pages/Dashboard";
+import Help from "./pages/Help";
+import LLM from "./pages/LLM";
+import Logging from "./pages/Logging";
+import Models from "./pages/Models";
+import Settings from "./pages/Settings";
+import Simulations from "./pages/Simulations";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: "\u{1F3E0}" },
