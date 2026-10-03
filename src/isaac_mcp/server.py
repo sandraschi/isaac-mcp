@@ -100,7 +100,14 @@ def _save_depot(depot: dict):
 # ---------------------------------------------------------------------------
 
 
-@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
 def sim_status() -> dict:
     """Health check: Isaac Sim availability, GPU info, depot, active jobs.
 
@@ -139,7 +146,14 @@ def sim_status() -> dict:
     }
 
 
-@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": False,
+        "openWorldHint": False,
+    }
+)
 def load_scene(uri: str, name: str) -> dict:
     """Load a USD/URDF scene into the simulation depot.
 
@@ -180,7 +194,14 @@ def load_scene(uri: str, name: str) -> dict:
     return {"success": True, "name": name, "path": str(dest), "size_kb": size_kb, "format": ext}
 
 
-@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": False,
+        "openWorldHint": False,
+    }
+)
 def spawn_model(uri: str, name: str, scene: str = "") -> dict:
     """Spawn a USD/URDF model into a loaded scene.
 
@@ -224,7 +245,14 @@ def spawn_model(uri: str, name: str, scene: str = "") -> dict:
     return {"success": True, "name": name, "scene": target_scene, "path": str(dest), "format": ext}
 
 
-@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": False,
+        "openWorldHint": False,
+    }
+)
 def start_sim(scene_name: str, headless: bool = True) -> dict:
     """Start Isaac Sim as a background subprocess.
 
@@ -315,7 +343,14 @@ def start_sim(scene_name: str, headless: bool = True) -> dict:
     }
 
 
-@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": False,
+        "openWorldHint": False,
+    }
+)
 def stop_sim(job_id: str) -> dict:
     """Stop a running simulation by job_id.
 
@@ -347,7 +382,14 @@ def stop_sim(job_id: str) -> dict:
     return {"success": True, "job_id": job_id, "stopped": True, "completed": completed}
 
 
-@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": True, "idempotentHint": False, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": True,
+        "idempotentHint": False,
+        "openWorldHint": False,
+    }
+)
 def isaac_shutdown(confirmed: bool = False) -> dict:
     """Shut down the isaac-mcp server: stop active sims, then terminate.
 
@@ -360,7 +402,10 @@ def isaac_shutdown(confirmed: bool = False) -> dict:
     ```
     """
     if not confirmed:
-        return {"success": False, "message": "Refusing: pass confirmed=true to stop active sims and terminate the server."}
+        return {
+            "success": False,
+            "message": "Refusing: pass confirmed=true to stop active sims and terminate the server.",
+        }
     stopped = []
     for jid, info in list(_jobs.items()):
         proc = info.get("process")
@@ -381,7 +426,14 @@ def isaac_shutdown(confirmed: bool = False) -> dict:
     return {"success": True, "stopped_jobs": stopped, "message": "isaac-mcp server terminating."}
 
 
-@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
 def get_state(job_id: str) -> dict:
     """Get current simulation state: joint positions, velocities, sensor data, time.
 
@@ -401,7 +453,14 @@ def get_state(job_id: str) -> dict:
     return {"success": True, "job_id": job_id, **state}
 
 
-@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": False,
+        "openWorldHint": False,
+    }
+)
 def apply_control(job_id: str, ctrl: dict) -> dict:
     """Apply control signals (joint torques, positions, velocities).
 
@@ -423,7 +482,14 @@ def apply_control(job_id: str, ctrl: dict) -> dict:
     return {"success": True, "job_id": job_id, "applied": list(ctrl.keys())}
 
 
-@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
 def list_scenes() -> dict:
     """List all loaded scenes in the depot with metadata.
 
@@ -439,7 +505,14 @@ def list_scenes() -> dict:
     return {"success": True, "scenes": depot, "count": len(depot)}
 
 
-@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
 def list_jobs() -> dict:
     """List active and completed simulation jobs.
 
@@ -516,7 +589,14 @@ def _extract_json_array(text: str) -> list:
 # ---------------------------------------------------------------------------
 
 
-@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": False,
+        "openWorldHint": False,
+    }
+)
 async def agentic_sim_workflow(goal: str, ctx: Context) -> dict:
     """Execute an autonomous multi-step simulation workflow using the host LLM.
 
@@ -584,7 +664,14 @@ After completion, summarize what happened and any observations."""
             }
 
 
-@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": False,
+        "openWorldHint": False,
+    }
+)
 async def natural_language_control(prompt: str, job_id: str, ctx: Context) -> dict:
     """Convert a natural language command to actuator control values for a running sim.
 
@@ -652,7 +739,14 @@ Example: {{"shoulder_joint": 0.5, "elbow_joint": -0.3}}"""
     }
 
 
-@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
 async def analyze_sim_state(job_id: str, ctx: Context) -> dict:
     """Read the current sim state and produce a natural-language analysis of what the robot is doing.
 
@@ -714,7 +808,14 @@ Describe in plain English:
             return {"success": False, "message": f"LLM unavailable: {e}"}
 
 
-@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": True,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
 async def analyze_sim_logs(job_id: str, ctx: Context) -> dict:
     """Read the sim stderr log and ask the LLM for root-cause analysis.
 
@@ -793,7 +894,14 @@ Provide:
             return {"success": False, "message": f"LLM unavailable: {e}"}
 
 
-@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
+@mcp.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": False,
+        "openWorldHint": False,
+    }
+)
 async def discover_model(description: str, ctx: Context) -> dict:
     """Search for and download a USD/URDF robot model from GitHub given a natural-language description.
 

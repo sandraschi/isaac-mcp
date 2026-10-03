@@ -11,7 +11,7 @@ isaac-mcp = "isaac_mcp:main"
 [dependency-groups]
 # NOTE: [project.optional-dependencies] dev is kept for CI (`uv sync --extra dev`);
 # local `uv sync` uses this group - keep both lists in sync.
-dev = ["pytest>=8", "pytest-asyncio>=0.24", "pytest-mock>=3", "httpx>=0.28", "ruff>=0.16.0,<0.17", "pyright>=1.1.390"]
+dev = ["pytest>=8", "pytest-asyncio>=0.24", "pytest-mock>=3", "pytest-cov>=5", "httpx>=0.28", "ruff>=0.16.0,<0.17", "pyright>=1.1.390"]
 
 [build-system]
 requires = ["hatchling"]
@@ -25,8 +25,18 @@ line-length = 100
 target-version = "py311"
 
 [tool.ruff.lint]
-select = ["E", "W", "F", "I", "B", "UP"]
+select = ["E", "W", "F", "I", "B", "UP", "T20"]
 ignore = ["E501"]
 
+[tool.ruff.lint.per-file-ignores]
+# _sim_runner.py is a subprocess entrypoint: stderr prints are its log channel,
+# not server-runtime logging (see BUG-017 scoping).
+"src/isaac_mcp/_sim_runner.py" = ["T20"]
+"tests/**" = ["T20"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+addopts = "--cov=isaac_mcp --cov-report=term-missing --cov-fail-under=40"
+
 [project.optional-dependencies]
-dev = ["pytest>=8.0", "ruff>=0.16.0,<0.17"]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.24", "pytest-cov>=5", "ruff>=0.16.0,<0.17"]
