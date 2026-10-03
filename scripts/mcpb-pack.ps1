@@ -1,5 +1,10 @@
 param([string]$RepoRoot)
 Set-Location $RepoRoot
+# MCPB fresh stage: wipe + recopy src/ -> mcpb/src/ (never ship a stale bundle)
+$stage = Join-Path $RepoRoot 'mcpb/src'
+if (Test-Path $stage) { Remove-Item -Recurse -Force $stage }
+New-Item -ItemType Directory -Force -Path $stage | Out-Null
+Copy-Item (Join-Path $RepoRoot 'src/*') $stage -Recurse -Force
 New-Item -ItemType Directory -Force -Path dist | Out-Null
 $proj = Get-Content pyproject.toml -Raw
 $name = if ($proj -match '(?m)^name = "(.*)"') { $matches[1] } else { Split-Path -Leaf $PWD }

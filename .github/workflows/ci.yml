@@ -1,7 +1,9 @@
 name: CI
 on:
   push:
-    tags: ["v*"]
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
   workflow_dispatch:
 
 jobs:
@@ -9,21 +11,26 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: pip install ruff
-      - run: ruff check src/ web_sota/backend/
+      - uses: astral-sh/setup-uv@v3
+      - run: uv sync --extra dev
+      - run: uv run ruff check src/ web_sota/backend/
+      - run: uv run ruff format src/ web_sota/backend/ --check
+
+  typecheck:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v3
+      - run: uv sync --extra dev
+      - run: uv run pyright src/
 
   test:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-      - run: pip install fastmcp httpx fastapi uvicorn pytest pytest-asyncio
-      - run: pytest tests/ -q
+      - uses: astral-sh/setup-uv@v3
+      - run: uv sync --extra dev
+      - run: uv run pytest tests/ -q
 
   build-web:
     runs-on: windows-latest
@@ -31,8 +38,10 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: "22"
       - working-directory: web_sota
         run: |
           npm ci
-          npx vite build
+          npm run check
+          npm run biome:ci
+          npm run build
