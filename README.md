@@ -52,7 +52,8 @@ uv run python -m isaac_mcp
 | 11 | `natural_language_control` | Control the sim via natural language ("open the gripper") |
 | 12 | `analyze_sim_state` | Physics diagnostics — contact forces, torque limits, stability |
 | 13 | `analyze_sim_logs` | Parse Isaac Sim / Omniverse logs for GPU errors and warnings |
-| 14 | `discover_scene` | Search and download USD assets from NVIDIA Omniverse |
+| 14 | `discover_model` | Search and download USD assets from GitHub |
+| 15 | `isaac_shutdown` | Stop active sims and terminate the server (confirmed=true) |
 
 [Full tool reference →](docs/TOOLS.md)
 
@@ -88,8 +89,40 @@ MCP Client  ──►  isaac-mcp (FastMCP 3.2)
 
 | Port | Service |
 |------|---------|
-| 11048 | FastAPI backend + MCP HTTP |
-| 11049 | Vite React frontend |
+| 11049 | FastAPI backend + MCP HTTP (`/mcp`) |
+| 11048 | Vite React frontend (dev, proxies `/api` + `/health` to 11049) |
+
+## Stack
+
+- Backend: Python 3.11+, FastMCP `>=3.4.4,<4`, FastAPI + uvicorn
+- Frontend: React 19 + Vite 6 + TailwindCSS 4 + react-router-dom 7
+  (+ `@tauri-apps/api` v2 for the desktop shell)
+- Desktop: Tauri 2.0 (NSIS, `native/`)
+- Local LLM: Ollama (`llama3.2:3b` fallback) for the AI tools
+
+## Environment
+
+Copy `.env.example` to `.env`:
+
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `ISAAC_SIM_PATH` | `C:/Program Files/NVIDIA/Isaac Sim` | Isaac Sim install root (auto-detected) |
+| `ISAAC_PYTHON` | auto (`.venv-isaac311` first) | Isaac Sim Python 3.11 interpreter |
+| `ISAAC_MCP_SCENES_DIR` | `./scenes/` | USD scene depot |
+| `ISAAC_MCP_JOBS_DIR` | `./jobs/` | Sim job state/control dirs |
+
+## Claude Desktop config
+
+```json
+{
+  "mcpServers": {
+    "isaac": {
+      "command": "uv",
+      "args": ["run", "--directory", "D:/Dev/repos/isaac-mcp", "python", "-m", "isaac_mcp"]
+    }
+  }
+}
+```
 
 ## Footnotes
 

@@ -1,5 +1,29 @@
 # Changelog
 
+## [Unreleased] — 2026-10-04 (assfix)
+
+### Added
+- REST: POST /api/shutdown (orderly exit), POST /api/scenes/load,
+  POST /api/jobs/start + /api/jobs/{id}/stop (Simulations/Models buttons work),
+  GET /api/skills (reads skills/*/SKILL.md), GET /api/v1/diagnostics,
+  GET /api/llm/discover|models|onboarding (providers shape unchanged)
+- skills/isaac/SKILL.md, llms-full.txt (+ llms.txt link), glama.json (15 tools),
+  .env.example, .cursorrules/.windsurfrules, copilot-instructions,
+  .claude-plugin/plugin.json + hooks/hooks.json, .gitattributes (eol=lf)
+- CI: push/PR triggers, ruff-format + pyright + pytest + biome/tsc web gates,
+  node 22; justfile fmt + build-native + real bootstrap; web check + biome:ci
+  scripts; @tauri-apps/api dep; pytest coverage gate (--cov-fail-under=40)
+- Dashboard hero with quick-start; fixed README ports table (was swapped)
+
+### Fixed
+- CRITICAL: CORS allow_origins ["*"] -> explicit origins + LAN/Tailscale regex
+- tauri.conf.json frontendDist (web_sota/dist) + CSP ports; backend.rs log strings
+- cua-nsis-config.json ports/paths; mcpb pack now wipe+recopies src/; .mcpbignore
+- ruff format; T20 print-ban + per-file-ignores; FastAPI Query regex= deprecations
+- Hermetic nl_control test (was Ollama-flaky); biome clean (button types, dep
+  arrays, svg titles, stable chat keys); Help TROUBLES key
+- .gitignore: reports/, .env, *.mcpb, *.bak-*, native/target/, native/gen/
+
 ## [Unreleased] — 2026-09-02
 
 ### Added

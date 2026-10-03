@@ -16,3 +16,8 @@ CHANGELOG.md
 justfile
 uv.lock
 pyproject.toml
+native/
+data/
+dist/
+*.bak
+*.bak-*

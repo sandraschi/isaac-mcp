@@ -2,6 +2,8 @@
 
 A general-purpose NVIDIA Isaac Sim/Lab simulation server via MCP.
 
+Full reference: llms-full.txt
+
 ## Tools
 - load_scene / list_scenes — scene depot management
 - spawn_model — add USD/URDF models to scenes
