@@ -51,6 +51,45 @@ async def status():
     return sim_status()
 
 
+@app.get("/api/capabilities")
+async def capabilities():
+    """Standard fleet shape for webapp discovery."""
+    return {
+        "service": "isaac-mcp",
+        "version": "0.2.0",
+        "status": "ok",
+        "tool_count": 15,
+        "tools": [
+            "sim_status",
+            "load_scene",
+            "spawn_model",
+            "start_sim",
+            "stop_sim",
+            "get_state",
+            "apply_control",
+            "list_scenes",
+            "list_jobs",
+            "agentic_sim_workflow",
+            "natural_language_control",
+            "analyze_sim_state",
+            "analyze_sim_logs",
+            "discover_model",
+            "isaac_shutdown",
+        ],
+        "endpoints": [
+            "/health",
+            "/api/health",
+            "/api/capabilities",
+            "/api/status",
+            "/api/scenes",
+            "/api/simulations",
+            "/api/llm/chat",
+            "/mcp",
+        ],
+        "transports": ["http", "stdio"],
+    }
+
+
 @app.get("/api/scenes")
 async def scenes():
     return list_scenes()
