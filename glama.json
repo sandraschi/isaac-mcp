@@ -1,0 +1,26 @@
+{
+  "$schema": "https://glama.ai/mcp/schemas/2025/server.json",
+  "name": "isaac-mcp",
+  "description": "NVIDIA Isaac Sim/Lab simulation via MCP — load USD scenes, spawn robots, run GPU physics, AI workflows",
+  "version": "0.2.0",
+  "categories": ["Physics", "Robotics", "Simulation"],
+  "tools": [
+    {"name": "sim_status", "description": "Health check: Isaac Sim availability, GPU info, depot, active jobs"},
+    {"name": "load_scene", "description": "Load a USD/URDF scene file into the scene depot"},
+    {"name": "spawn_model", "description": "Spawn a USD/URDF model into a loaded scene"},
+    {"name": "start_sim", "description": "Start Isaac Sim as a background subprocess (returns job_id)"},
+    {"name": "stop_sim", "description": "Stop a running simulation by job_id"},
+    {"name": "get_state", "description": "Read joint positions, velocities, sensor data for a job"},
+    {"name": "apply_control", "description": "Apply joint torques/positions/velocities to a running sim"},
+    {"name": "list_scenes", "description": "List all USD scenes in the depot"},
+    {"name": "list_jobs", "description": "List active and completed simulation jobs"},
+    {"name": "isaac_shutdown", "description": "Stop active sims and terminate the server (confirmed=true)"},
+    {"name": "agentic_sim_workflow", "description": "Autonomous multi-step simulation workflow via host LLM"},
+    {"name": "natural_language_control", "description": "NL command to actuator values for a running sim"},
+    {"name": "analyze_sim_state", "description": "NL analysis of robot posture/behaviour from sim state"},
+    {"name": "analyze_sim_logs", "description": "Root-cause diagnosis from sim runner logs"},
+    {"name": "discover_model", "description": "Find USD/URDF robot models from GitHub via LLM"}
+  ],
+  "keywords": ["isaac-sim", "nvidia", "simulation", "robotics", "mcp"],
+  "homepage": "https://github.com/sandraschi/isaac-mcp"
+}

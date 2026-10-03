@@ -1,0 +1,59 @@
+# isaac-mcp — full reference (llms.txt points here)
+
+NVIDIA Isaac Sim/Lab simulation via MCP. GPU-accelerated PhysX physics, USD
+scenes, file-protocol job isolation. 15 tools (9 sim + 5 AI + shutdown).
+
+## Sim tools (9)
+
+- sim_status() — health: isaac_available, isaac_version, isaac_python, gpus[],
+  scenes_dir_exists, scenes_in_depot, active_jobs, jobs_dir_exists.
+- load_scene(uri, name) — copy/download USD/URDF/SDF/STL/STEP into scenes depot.
+- spawn_model(uri, name, scene="") — copy a model into a scene's models/ dir.
+- start_sim(scene_name, headless=True) — launch Isaac Sim subprocess, returns
+  job_id (poll get_state/list_jobs; first launch pulls extensions, 10+ min).
+- stop_sim(job_id) — touch stop.signal + terminate the runner.
+- get_state(job_id) — state.json: time, step, qpos, qvel, actuator_values.
+- apply_control(job_id, ctrl) — write control.json {actuator: value}.
+- list_scenes() / list_jobs() — depot registry / active+completed jobs.
+- isaac_shutdown(confirmed=True) — stop sims, terminate server (MCP).
+
+## AI tools (5, ctx.sample with Ollama fallback on 127.0.0.1:11434)
+
+- agentic_sim_workflow(goal, ctx) — plan + narrate a multi-step sim workflow.
+- natural_language_control(prompt, job_id, ctx) — NL to actuator JSON.
+- analyze_sim_state(job_id, ctx) — posture/stability NL report.
+- analyze_sim_logs(job_id, ctx) — root-cause from error.txt + runner.log tail.
+- discover_model(description, ctx) — LLM GitHub raw URLs, download into depot.
+
+## REST (FastAPI :11049; frontend Vite :11048)
+
+- GET /health, /api/health, /api/status (sim_status), /api/capabilities
+- GET /api/scenes, POST /api/scenes/load {uri, name}
+- GET /api/simulations, POST /api/jobs/start {scene_name, headless?},
+  POST /api/jobs/{id}/stop, POST /api/shutdown (orderly exit for launcher)
+- GET /api/skills (skills/*/SKILL.md), GET /api/v1/diagnostics (CUA-NSIS)
+- AI: POST /api/ai/workflow|nl-control|analyze-state|analyze-logs|discover-model
+- LLM: GET /api/llm/providers|discover|models|onboarding, POST /api/llm/chat
+- Logs: GET /api/logs|/stats|/export, DELETE /api/logs. MCP HTTP mounted /mcp.
+
+## Config (see .env.example)
+
+ISAAC_SIM_PATH (install root), ISAAC_PYTHON (3.11 interpreter override),
+ISAAC_MCP_SCENES_DIR (default ./scenes/), ISAAC_MCP_JOBS_DIR (default ./jobs/),
+ISAAC_MCP_HOST/ISAAC_MCP_PORT (default 127.0.0.1:11049).
+
+## Layout
+
+- src/isaac_mcp/server.py — 15 MCP tools; _sim_runner.py — Isaac subprocess
+  (file protocol: metadata.json, state.json, control.json, stop.signal,
+  completed.txt, error.txt, runner.log)
+- web_sota/backend/server.py — FastAPI; web_sota/src/ — 7 React pages
+- native/ — Tauri shell (backend 11049); scenes/, jobs/ — runtime data
+- Skills: skills/isaac/SKILL.md (served via GET /api/skills)
+
+## Commands
+
+- uv run python -m isaac_mcp — MCP stdio server
+- .\web_sota\start.ps1 — full dashboard (fleet engine + standalone fallback)
+- uv run pytest tests/ -q — tests (coverage gate --cov-fail-under=40)
+- uv run ruff check src/ web_sota/backend/ — lint (T20 print-ban enforced)
