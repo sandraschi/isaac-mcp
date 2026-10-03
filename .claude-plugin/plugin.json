@@ -1,0 +1,7 @@
+{
+  "name": "isaac-mcp",
+  "description": "NVIDIA Isaac Sim/Lab simulation via MCP (15 tools)",
+  "version": "0.2.0",
+  "author": "sandraschi",
+  "hooks": "../hooks/hooks.json"
+}
