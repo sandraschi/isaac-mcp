@@ -100,13 +100,22 @@ def _save_depot(depot: dict):
 # ---------------------------------------------------------------------------
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 def sim_status() -> dict:
-    """Health check: Isaac Sim availability, GPU info, depot, active jobs."""
+    """Health check: Isaac Sim availability, GPU info, depot, active jobs.
+
+    ## Return Format
+    Dict with isaac_available, gpus, scenes/jobs status
+
+    ## Examples
+    ```python
+    sim_status()
+    ```
+    """
 
     omni_ok = False
     try:
-        import omni.isaac.core  # noqa: F401
+        import omni.isaac.core  # noqa: F401  # pyright: ignore[reportMissingImports]
 
         omni_ok = True
     except ImportError:
@@ -130,7 +139,7 @@ def sim_status() -> dict:
     }
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
 def load_scene(uri: str, name: str) -> dict:
     """Load a USD/URDF scene into the simulation depot.
 
@@ -138,6 +147,14 @@ def load_scene(uri: str, name: str) -> dict:
     name: friendly name for the depot
 
     Returns scene metadata.
+
+    ## Return Format
+    Dict with success, name, path, size_kb, format
+
+    ## Examples
+    ```python
+    load_scene("C:/scenes/room.usd", "room")
+    ```
     """
     depot = _load_depot()
 
@@ -163,7 +180,7 @@ def load_scene(uri: str, name: str) -> dict:
     return {"success": True, "name": name, "path": str(dest), "size_kb": size_kb, "format": ext}
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
 def spawn_model(uri: str, name: str, scene: str = "") -> dict:
     """Spawn a USD/URDF model into a loaded scene.
 
@@ -172,6 +189,14 @@ def spawn_model(uri: str, name: str, scene: str = "") -> dict:
     scene: target scene name (default: first scene in depot)
 
     Copies the model into the scene's models subdirectory.
+
+    ## Return Format
+    Dict with success, name, scene, path, format
+
+    ## Examples
+    ```python
+    spawn_model("C:/models/arm.usd", "arm", "room")
+    ```
     """
     depot = _load_depot()
     if scene and scene not in depot:
@@ -199,7 +224,7 @@ def spawn_model(uri: str, name: str, scene: str = "") -> dict:
     return {"success": True, "name": name, "scene": target_scene, "path": str(dest), "format": ext}
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
 def start_sim(scene_name: str, headless: bool = True) -> dict:
     """Start Isaac Sim as a background subprocess.
 
@@ -207,6 +232,14 @@ def start_sim(scene_name: str, headless: bool = True) -> dict:
     headless: if True, runs without the GUI viewer
 
     Returns job_id for use with get_state, stop_sim, apply_control.
+
+    ## Return Format
+    Dict with success, job_id, scene_name, headless, scene_loaded
+
+    ## Examples
+    ```python
+    start_sim("room")
+    ```
     """
     depot = _load_depot()
     if scene_name not in depot:
@@ -282,9 +315,18 @@ def start_sim(scene_name: str, headless: bool = True) -> dict:
     }
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
 def stop_sim(job_id: str) -> dict:
-    """Stop a running simulation by job_id."""
+    """Stop a running simulation by job_id.
+
+    ## Return Format
+    Dict with success, job_id, stopped, completed
+
+    ## Examples
+    ```python
+    stop_sim("abc12345")
+    ```
+    """
     job_dir = JOBS_DIR / job_id
     if not job_dir.exists():
         return {"success": False, "error": f"Job '{job_id}' not found"}
@@ -305,9 +347,52 @@ def stop_sim(job_id: str) -> dict:
     return {"success": True, "job_id": job_id, "stopped": True, "completed": completed}
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": True, "idempotentHint": False, "openWorldHint": False})
+def isaac_shutdown(confirmed: bool = False) -> dict:
+    """Shut down the isaac-mcp server: stop active sims, then terminate.
+
+    ## Return Format
+    Dict with success, stopped_jobs, message
+
+    ## Examples
+    ```python
+    isaac_shutdown(confirmed=True)
+    ```
+    """
+    if not confirmed:
+        return {"success": False, "message": "Refusing: pass confirmed=true to stop active sims and terminate the server."}
+    stopped = []
+    for jid, info in list(_jobs.items()):
+        proc = info.get("process")
+        if proc and proc.poll() is None:
+            try:
+                proc.terminate()
+                proc.wait(timeout=10)
+            except Exception:
+                try:
+                    proc.kill()
+                except Exception:
+                    pass
+            stopped.append(jid)
+    import os as _os
+    import signal as _signal
+
+    _os.kill(_os.getpid(), _signal.SIGTERM)
+    return {"success": True, "stopped_jobs": stopped, "message": "isaac-mcp server terminating."}
+
+
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 def get_state(job_id: str) -> dict:
-    """Get current simulation state: joint positions, velocities, sensor data, time."""
+    """Get current simulation state: joint positions, velocities, sensor data, time.
+
+    ## Return Format
+    Dict with success, job_id plus state fields
+
+    ## Examples
+    ```python
+    get_state("abc12345")
+    ```
+    """
     state_path = JOBS_DIR / job_id / "state.json"
     if not state_path.exists():
         return {"success": False, "error": f"No state data for job '{job_id}'"}
@@ -316,11 +401,19 @@ def get_state(job_id: str) -> dict:
     return {"success": True, "job_id": job_id, **state}
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
 def apply_control(job_id: str, ctrl: dict) -> dict:
     """Apply control signals (joint torques, positions, velocities).
 
     ctrl: dict of {actuator_name_or_index: value}
+
+    ## Return Format
+    Dict with success, job_id, applied
+
+    ## Examples
+    ```python
+    apply_control("abc12345", {"joint_1": 0.5})
+    ```
     """
     job_dir = JOBS_DIR / job_id
     if not job_dir.exists():
@@ -330,16 +423,34 @@ def apply_control(job_id: str, ctrl: dict) -> dict:
     return {"success": True, "job_id": job_id, "applied": list(ctrl.keys())}
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 def list_scenes() -> dict:
-    """List all loaded scenes in the depot with metadata."""
+    """List all loaded scenes in the depot with metadata.
+
+    ## Return Format
+    Dict with success, scenes, count
+
+    ## Examples
+    ```python
+    list_scenes()
+    ```
+    """
     depot = _load_depot()
     return {"success": True, "scenes": depot, "count": len(depot)}
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 def list_jobs() -> dict:
-    """List active and completed simulation jobs."""
+    """List active and completed simulation jobs.
+
+    ## Return Format
+    Dict with success, active, completed, total
+
+    ## Examples
+    ```python
+    list_jobs()
+    ```
+    """
     active = []
     completed = []
 
@@ -405,7 +516,7 @@ def _extract_json_array(text: str) -> list:
 # ---------------------------------------------------------------------------
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
 async def agentic_sim_workflow(goal: str, ctx: Context) -> dict:
     """Execute an autonomous multi-step simulation workflow using the host LLM.
 
@@ -473,7 +584,7 @@ After completion, summarize what happened and any observations."""
             }
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
 async def natural_language_control(prompt: str, job_id: str, ctx: Context) -> dict:
     """Convert a natural language command to actuator control values for a running sim.
 
@@ -541,7 +652,7 @@ Example: {{"shoulder_joint": 0.5, "elbow_joint": -0.3}}"""
     }
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 async def analyze_sim_state(job_id: str, ctx: Context) -> dict:
     """Read the current sim state and produce a natural-language analysis of what the robot is doing.
 
@@ -603,7 +714,7 @@ Describe in plain English:
             return {"success": False, "message": f"LLM unavailable: {e}"}
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": True, "destructiveHint": False, "idempotentHint": True, "openWorldHint": False})
 async def analyze_sim_logs(job_id: str, ctx: Context) -> dict:
     """Read the sim stderr log and ask the LLM for root-cause analysis.
 
@@ -682,7 +793,7 @@ Provide:
             return {"success": False, "message": f"LLM unavailable: {e}"}
 
 
-@mcp.tool()
+@mcp.tool(annotations={"readOnlyHint": False, "destructiveHint": False, "idempotentHint": False, "openWorldHint": False})
 async def discover_model(description: str, ctx: Context) -> dict:
     """Search for and download a USD/URDF robot model from GitHub given a natural-language description.
 

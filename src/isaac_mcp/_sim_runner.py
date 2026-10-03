@@ -1,3 +1,4 @@
+# pyright: reportMissingImports=false
 """Isaac Sim subprocess runner for isaac-mcp.
 
 Implements the fleet file-protocol contract (same as mujoco-mcp/_sim_runner.py):
