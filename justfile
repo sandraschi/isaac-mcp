@@ -5,6 +5,8 @@ import 'scripts/just/fleet.just'
 # === Fleet-standard ===
 bootstrap:
     uv sync
+    pre-commit install
+    powershell.exe -NoProfile -c "if (Test-Path web_sota/package.json) { npm ci --prefix web_sota }"
 
 serve:
     uv run python -m isaac_mcp
@@ -12,8 +14,14 @@ serve:
 lint:
     uv run ruff check src/ web_sota/backend/
 
+fmt:
+    uv run ruff format src/ web_sota/backend/
+
 fix:
     uv run ruff check --fix src/ web_sota/backend/
+
+build-native:
+    powershell.exe -NoProfile -File "{{justfile_directory()}}/native/build.ps1"
 
 test:
     uv run pytest tests/ -q

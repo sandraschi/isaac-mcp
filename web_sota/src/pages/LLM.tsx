@@ -74,7 +74,12 @@ export default function LLM() {
       <div className="bg-slate-800 rounded-xl p-5 border border-slate-700">
         <div className="flex gap-3 mb-3">
           <div>
-            <label htmlFor="llm-provider" className="text-xs text-slate-400 mr-2">Provider:</label>
+            <label
+              htmlFor="llm-provider"
+              className="text-xs text-slate-400 mr-2"
+            >
+              Provider:
+            </label>
             <select
               id="llm-provider"
               className="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-sm"
@@ -89,7 +94,9 @@ export default function LLM() {
             </select>
           </div>
           <div>
-            <label htmlFor="llm-model" className="text-xs text-slate-400 mr-2">Model:</label>
+            <label htmlFor="llm-model" className="text-xs text-slate-400 mr-2">
+              Model:
+            </label>
             <select
               id="llm-model"
               className="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-sm"
