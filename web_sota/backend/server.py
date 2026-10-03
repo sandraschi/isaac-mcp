@@ -18,6 +18,10 @@ from web_sota.backend.routes.logging import router as logging_router
 REPO_ROOT = Path(__file__).resolve().parent.parent.parent
 
 
+mcp_mod = __import__("isaac_mcp.server", fromlist=["mcp"])
+mcp_app = mcp_mod.mcp.http_app(path="/")  # path="/" per BUG-008
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.activity_log = activity_log
@@ -25,7 +29,8 @@ async def lifespan(app: FastAPI):
     log_dir.mkdir(exist_ok=True)
     activity_log.start_file_watch(log_dir / "server.log")
     activity_log.info("server", "Server started")
-    yield
+    async with mcp_app.router.lifespan_context(app):  # BUG-038: drive sub-app lifespan
+        yield
     activity_log.info("server", "Server stopped")
 
 
@@ -298,9 +303,8 @@ async def llm_chat(body: dict):
         return {"error": str(e)}
 
 
-# Mount MCP HTTP
-mcp_mod = __import__("isaac_mcp.server", fromlist=["mcp"])
-app.mount("/mcp", mcp_mod.mcp.http_app(path="/"))
+# Mount MCP HTTP (lifespan wired above per BUG-038)
+app.mount("/mcp", mcp_app)
 
 # Serve frontend static files (if dist exists)
 dist = Path(__file__).resolve().parent.parent / "dist"
