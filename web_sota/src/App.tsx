@@ -1,21 +1,29 @@
 import { BrowserRouter, NavLink, Route, Routes } from "react-router-dom";
 import FloatingChat from "./components/FloatingChat";
+import Chat from "./pages/Chat";
 import Dashboard from "./pages/Dashboard";
 import Help from "./pages/Help";
+import Inbox from "./pages/Inbox";
 import LLM from "./pages/LLM";
 import Logging from "./pages/Logging";
 import Models from "./pages/Models";
 import Settings from "./pages/Settings";
 import Simulations from "./pages/Simulations";
+import Skills from "./pages/Skills";
+import Tools from "./pages/Tools";
 
 const navItems = [
-  { to: "/", label: "Dashboard", icon: "\u{1F3E0}" },
-  { to: "/simulations", label: "Simulations", icon: "\u{1F3AE}" },
-  { to: "/models", label: "Models", icon: "\u{1F4E6}" },
-  { to: "/logging", label: "Logging", icon: "\u{1F4CA}" },
-  { to: "/llm", label: "LLM", icon: "\u{1F916}" },
-  { to: "/settings", label: "Settings", icon: "\u2699\uFE0F" },
-  { to: "/help", label: "Help", icon: "\u2753" },
+  { to: "/", label: "Dashboard", icon: "🏠" },
+  { to: "/simulations", label: "Simulations", icon: "🎮" },
+  { to: "/models", label: "Models", icon: "📦" },
+  { to: "/inbox", label: "Inbox", icon: "📥" },
+  { to: "/tools", label: "Tools", icon: "🛠️" },
+  { to: "/skills", label: "Skills", icon: "📚" },
+  { to: "/chat", label: "Chat", icon: "💬" },
+  { to: "/logging", label: "Logging", icon: "📊" },
+  { to: "/llm", label: "LLM", icon: "🤖" },
+  { to: "/settings", label: "Settings", icon: "⚙️" },
+  { to: "/help", label: "Help", icon: "❓" },
 ];
 
 function Sidebar() {
@@ -55,6 +63,10 @@ export default function App() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/simulations" element={<Simulations />} />
             <Route path="/models" element={<Models />} />
+            <Route path="/inbox" element={<Inbox />} />
+            <Route path="/tools" element={<Tools />} />
+            <Route path="/skills" element={<Skills />} />
+            <Route path="/chat" element={<Chat />} />
             <Route path="/logging" element={<Logging />} />
             <Route path="/llm" element={<LLM />} />
             <Route path="/settings" element={<Settings />} />
