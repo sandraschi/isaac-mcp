@@ -66,7 +66,10 @@ export default function Settings() {
 
       <div className="bg-slate-800 rounded-xl p-5 border border-slate-700 space-y-4 mb-6">
         <div>
-          <label htmlFor="isaac-sim-path" className="block text-sm text-slate-400 mb-1">
+          <label
+            htmlFor="isaac-sim-path"
+            className="block text-sm text-slate-400 mb-1"
+          >
             Isaac Sim Path
           </label>
           <input
@@ -77,7 +80,10 @@ export default function Settings() {
           />
         </div>
         <div>
-          <label htmlFor="scenes-dir" className="block text-sm text-slate-400 mb-1">
+          <label
+            htmlFor="scenes-dir"
+            className="block text-sm text-slate-400 mb-1"
+          >
             Scenes Directory
           </label>
           <input
@@ -88,7 +94,10 @@ export default function Settings() {
           />
         </div>
         <div>
-          <label htmlFor="jobs-dir" className="block text-sm text-slate-400 mb-1">
+          <label
+            htmlFor="jobs-dir"
+            className="block text-sm text-slate-400 mb-1"
+          >
             Jobs Directory
           </label>
           <input
@@ -112,7 +121,10 @@ export default function Settings() {
 
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label htmlFor="llm-provider" className="block text-xs text-slate-400 mb-1">
+            <label
+              htmlFor="llm-provider"
+              className="block text-xs text-slate-400 mb-1"
+            >
               Provider
             </label>
             <select
@@ -134,7 +146,12 @@ export default function Settings() {
             </select>
           </div>
           <div>
-            <label htmlFor="llm-model" className="block text-xs text-slate-400 mb-1">Model</label>
+            <label
+              htmlFor="llm-model"
+              className="block text-xs text-slate-400 mb-1"
+            >
+              Model
+            </label>
             <select
               id="llm-model"
               className="w-full bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-cyan-500"

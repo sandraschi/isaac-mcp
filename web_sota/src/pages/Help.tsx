@@ -136,6 +136,7 @@ export default function Help() {
       <div className="flex gap-2 mb-6 flex-wrap">
         {TABS.map((t, i) => (
           <button
+            type="button"
             key={t}
             onClick={() => setTab(i)}
             className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${tab === i ? "bg-blue-600 text-white" : "border border-slate-300 text-slate-600 hover:bg-slate-100"}`}
@@ -155,7 +156,10 @@ export default function Help() {
 function Card({
   title,
   children,
-}: { title: string; children: React.ReactNode }) {
+}: {
+  title: string;
+  children: React.ReactNode;
+}) {
   return (
     <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-5 mb-4">
       <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-4">
@@ -371,7 +375,7 @@ uv pip install "isaacsim[all,extscache]==5.1.0" ${"\\`"}
   --extra-index-url https://pypi.nvidia.com -p .venv-isaac311
 
 # Accept EULA + pull extensions (10+ min, one-time)
-.\scripts\first_launch.ps1
+.scripts\first_launch.ps1
 
 uv run python -m isaac_mcp`}
         </pre>
@@ -452,8 +456,8 @@ function Troubleshooting() {
             </tr>
           </thead>
           <tbody>
-            {TROUBLES.map((t, i) => (
-              <tr key={i} className="border-b border-slate-100">
+            {TROUBLES.map((t) => (
+              <tr key={t.symptom} className="border-b border-slate-100">
                 <td className="py-2 pr-4 text-xs text-red-700 font-medium align-top">
                   {t.symptom}
                 </td>

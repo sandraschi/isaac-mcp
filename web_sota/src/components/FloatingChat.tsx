@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { API_BASE } from "../lib/api";
 
 interface Message {
+  id: number;
   role: "user" | "assistant";
   content: string;
 }
@@ -32,7 +33,7 @@ export default function FloatingChat() {
   const [chat, setChat] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [provider, setProvider] = useState(
+  const [provider] = useState(
     () => localStorage.getItem("llm_provider") || "ollama",
   );
   const [model, setModel] = useState(
@@ -44,11 +45,15 @@ export default function FloatingChat() {
     () => localStorage.getItem("fc_personality") || "helpful",
   );
   const bottomRef = useRef<HTMLDivElement>(null);
+  const idRef = useRef(0);
 
   useEffect(() => {
     try {
       const saved = localStorage.getItem("fc_chat");
-      if (saved) setChat(JSON.parse(saved));
+      if (saved) {
+        const loaded = JSON.parse(saved) as Omit<Message, "id">[];
+        setChat(loaded.map((m) => ({ ...m, id: idRef.current++ })));
+      }
     } catch {}
   }, []);
 
@@ -79,11 +84,11 @@ export default function FloatingChat() {
         }
       })
       .catch(() => {});
-  }, []);
+  }, [model]);
 
   useEffect(() => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [chat, open]);
+  }, [open]);
 
   useEffect(() => {
     fetch(`${API_BASE}/api/skills`)
@@ -96,7 +101,10 @@ export default function FloatingChat() {
   }, []);
 
   const sendMessage = async (text: string) => {
-    setChat((prev) => [...prev, { role: "user", content: text }]);
+    setChat((prev) => [
+      ...prev,
+      { id: idRef.current++, role: "user", content: text },
+    ]);
     setLoading(true);
     try {
       const sp = PERSONALITIES.find((p) => p.id === personality);
@@ -114,6 +122,7 @@ export default function FloatingChat() {
       setChat((prev) => [
         ...prev,
         {
+          id: idRef.current++,
           role: "assistant",
           content: data.response || data.error || "No response",
         },
@@ -122,6 +131,7 @@ export default function FloatingChat() {
       setChat((prev) => [
         ...prev,
         {
+          id: idRef.current++,
           role: "assistant",
           content: "Request failed. Is the backend running?",
         },
@@ -198,6 +208,7 @@ export default function FloatingChat() {
                 </select>
               )}
               <button
+                type="button"
                 onClick={() => setOpen(false)}
                 className="text-slate-500 hover:text-slate-300 text-lg leading-none"
               >
@@ -217,6 +228,7 @@ export default function FloatingChat() {
                 >
                   {EXAMPLES.map((ex) => (
                     <button
+                      type="button"
                       key={ex}
                       onClick={() => {
                         setInput(ex);
@@ -229,9 +241,9 @@ export default function FloatingChat() {
                 </div>
               </div>
             )}
-            {chat.map((msg, i) => (
+            {chat.map((msg) => (
               <div
-                key={i}
+                key={msg.id}
                 className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}
               >
                 <div
@@ -263,6 +275,7 @@ export default function FloatingChat() {
                 data-testid="floating-chat-input"
               />
               <button
+                type="button"
                 onClick={handleSend}
                 disabled={loading || !input.trim()}
                 className="bg-cyan-700 hover:bg-cyan-600 disabled:bg-slate-700 text-white px-3 py-2 rounded-lg text-sm font-medium"
@@ -273,6 +286,7 @@ export default function FloatingChat() {
             </div>
             <div className="flex justify-end gap-1.5">
               <button
+                type="button"
                 onClick={handleExport}
                 disabled={chat.length === 0}
                 className="text-slate-500 hover:text-slate-300 disabled:text-slate-700 text-xs px-1.5 py-1 rounded"
@@ -289,12 +303,14 @@ export default function FloatingChat() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
+                  <title>Export chat</title>
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                   <polyline points="7 10 12 15 17 10" />
                   <line x1="12" y1="15" x2="12" y2="3" />
                 </svg>
               </button>
               <button
+                type="button"
                 onClick={handleClear}
                 disabled={chat.length === 0}
                 className="text-slate-500 hover:text-slate-300 disabled:text-slate-700 text-xs px-1.5 py-1 rounded"
@@ -312,6 +328,7 @@ export default function FloatingChat() {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                 >
+                  <title>Clear chat</title>
                   <polyline points="3 6 5 6 21 6" />
                   <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                 </svg>
@@ -321,14 +338,15 @@ export default function FloatingChat() {
         </div>
       ) : (
         <button
+          type="button"
           onClick={() => setOpen(true)}
           className="h-12 w-12 rounded-full bg-cyan-700 hover:bg-cyan-600 shadow-xl flex items-center justify-center text-white text-xl transition-colors"
           title="Open chat"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            width="22"
-            height="22"
+            width="14"
+            height="14"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -336,6 +354,7 @@ export default function FloatingChat() {
             strokeLinecap="round"
             strokeLinejoin="round"
           >
+            <title>Export chat</title>
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
           </svg>
         </button>
