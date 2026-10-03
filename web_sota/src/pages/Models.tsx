@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { API_BASE } from "../lib/api";
 
 interface Scene {
@@ -10,21 +10,23 @@ export default function Models() {
   const [uri, setUri] = useState("");
   const [name, setName] = useState("");
 
-  const fetchScenes = async () => {
+  const fetchScenes = useCallback(async () => {
     try {
-      const r = await fetch(API_BASE + "/api/scenes");
+      const r = await fetch(`${API_BASE}/api/scenes`);
       if (r.ok) {
         const data = await r.json();
         setScenes(data.scenes || {});
       }
     } catch {}
-  };
+  }, []);
 
-  useEffect(() => { fetchScenes(); }, []);
+  useEffect(() => {
+    fetchScenes();
+  }, [fetchScenes]);
 
   const handleLoad = async () => {
     if (!uri || !name) return;
-    await fetch(API_BASE + "/api/scenes/load", {
+    await fetch(`${API_BASE}/api/scenes/load`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ uri, name }),
@@ -52,22 +54,33 @@ export default function Models() {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <button onClick={handleLoad} className="bg-cyan-700 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+          <button
+            type="button"
+            onClick={handleLoad}
+            className="bg-cyan-700 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
+          >
             Load
           </button>
         </div>
       </div>
       <div className="bg-slate-800 rounded-xl border border-slate-700">
-        <h2 className="text-lg font-semibold p-4 border-b border-slate-700">Loaded Scenes ({Object.keys(scenes).length})</h2>
+        <h2 className="text-lg font-semibold p-4 border-b border-slate-700">
+          Loaded Scenes ({Object.keys(scenes).length})
+        </h2>
         <div className="divide-y divide-slate-700">
           {Object.entries(scenes).map(([key, val]) => (
-            <div key={key} className="p-4 flex items-center justify-between text-sm">
+            <div
+              key={key}
+              className="p-4 flex items-center justify-between text-sm"
+            >
               <div>
                 <span className="font-medium">{key}</span>
                 <span className="text-slate-500 ml-2">{val.format}</span>
                 <span className="text-slate-500 ml-2">{val.size_kb} KB</span>
               </div>
-              <span className="text-xs text-slate-500 truncate max-w-96">{val.uri}</span>
+              <span className="text-xs text-slate-500 truncate max-w-96">
+                {val.uri}
+              </span>
             </div>
           ))}
         </div>

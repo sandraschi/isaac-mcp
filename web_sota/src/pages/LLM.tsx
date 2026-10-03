@@ -1,10 +1,14 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { API_BASE } from "../lib/api";
+
+interface LlmModel {
+  name: string;
+}
 
 export default function LLM() {
   const [prompt, setPrompt] = useState("");
   const [response, setResponse] = useState("");
-  const [providers, setProviders] = useState<Record<string, any[]>>({});
+  const [providers, setProviders] = useState<Record<string, LlmModel[]>>({});
   const [selectedProvider, setSelectedProvider] = useState("ollama");
   const [selectedModel, setSelectedModel] = useState("llama3.2:3b");
 
@@ -14,7 +18,7 @@ export default function LLM() {
     setSelectedProvider(savedProvider);
     setSelectedModel(savedModel);
 
-    fetch(API_BASE + "/api/llm/providers")
+    fetch(`${API_BASE}/api/llm/providers`)
       .then((r) => r.json())
       .then((d) => {
         setProviders(d);
@@ -25,7 +29,7 @@ export default function LLM() {
           }
         }
       })
-      .catch(() => setProviders({ ollama: [{name:"llama3.2:3b"}] }));
+      .catch(() => setProviders({ ollama: [{ name: "llama3.2:3b" }] }));
   }, []);
 
   const updateModel = (model: string) => {
@@ -46,10 +50,14 @@ export default function LLM() {
     if (!prompt) return;
     setResponse("Thinking...");
     try {
-      const r = await fetch(API_BASE + "/api/llm/chat", {
+      const r = await fetch(`${API_BASE}/api/llm/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ provider: selectedProvider, model: selectedModel, prompt }),
+        body: JSON.stringify({
+          provider: selectedProvider,
+          model: selectedModel,
+          prompt,
+        }),
       });
       const data = await r.json();
       setResponse(data.response || data.error || "No response");
@@ -58,7 +66,7 @@ export default function LLM() {
     }
   };
 
-  const providerModels = providers[selectedProvider] || providers["ollama"] || [];
+  const providerModels = providers[selectedProvider] || providers.ollama || [];
 
   return (
     <div className="max-w-3xl">
@@ -66,26 +74,32 @@ export default function LLM() {
       <div className="bg-slate-800 rounded-xl p-5 border border-slate-700">
         <div className="flex gap-3 mb-3">
           <div>
-            <label className="text-xs text-slate-400 mr-2">Provider:</label>
+            <label htmlFor="llm-provider" className="text-xs text-slate-400 mr-2">Provider:</label>
             <select
+              id="llm-provider"
               className="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-sm"
               value={selectedProvider}
               onChange={(e) => updateProvider(e.target.value)}
             >
               {Object.keys(providers).map((p) => (
-                <option key={p} value={p}>{p}</option>
+                <option key={p} value={p}>
+                  {p}
+                </option>
               ))}
             </select>
           </div>
           <div>
-            <label className="text-xs text-slate-400 mr-2">Model:</label>
+            <label htmlFor="llm-model" className="text-xs text-slate-400 mr-2">Model:</label>
             <select
+              id="llm-model"
               className="bg-slate-700 border border-slate-600 rounded-lg px-3 py-2 text-sm"
               value={selectedModel}
               onChange={(e) => updateModel(e.target.value)}
             >
-              {providerModels.map((m: any) => (
-                <option key={m.name} value={m.name}>{m.name}</option>
+              {providerModels.map((m: LlmModel) => (
+                <option key={m.name} value={m.name}>
+                  {m.name}
+                </option>
               ))}
             </select>
           </div>
@@ -97,7 +111,11 @@ export default function LLM() {
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
         />
-        <button onClick={handleSend} className="bg-cyan-700 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+        <button
+          type="button"
+          onClick={handleSend}
+          className="bg-cyan-700 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
+        >
           Send
         </button>
         {response && (

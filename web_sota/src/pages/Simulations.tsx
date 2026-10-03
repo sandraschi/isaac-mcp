@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { API_BASE } from "../lib/api";
 
 interface Job {
@@ -12,21 +12,25 @@ export default function Simulations() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [sceneName, setSceneName] = useState("");
 
-  const fetchJobs = async () => {
+  const fetchJobs = useCallback(async () => {
     try {
-      const r = await fetch(API_BASE + "/api/simulations");
+      const r = await fetch(`${API_BASE}/api/simulations`);
       if (r.ok) {
         const data = await r.json();
         setJobs([...(data.active || []), ...(data.completed || [])]);
       }
     } catch {}
-  };
+  }, []);
 
-  useEffect(() => { fetchJobs(); const iv = setInterval(fetchJobs, 3000); return () => clearInterval(iv); }, []);
+  useEffect(() => {
+    fetchJobs();
+    const iv = setInterval(fetchJobs, 3000);
+    return () => clearInterval(iv);
+  }, [fetchJobs]);
 
   const handleStart = async () => {
     if (!sceneName) return;
-    await fetch(API_BASE + "/api/jobs/start", {
+    await fetch(`${API_BASE}/api/jobs/start`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ scene_name: sceneName }),
@@ -51,26 +55,43 @@ export default function Simulations() {
             value={sceneName}
             onChange={(e) => setSceneName(e.target.value)}
           />
-          <button onClick={handleStart} className="bg-cyan-700 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium">
+          <button
+            type="button"
+            onClick={handleStart}
+            className="bg-cyan-700 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
+          >
             Start
           </button>
         </div>
       </div>
       <div className="bg-slate-800 rounded-xl border border-slate-700">
-        <h2 className="text-lg font-semibold p-4 border-b border-slate-700">Job History</h2>
+        <h2 className="text-lg font-semibold p-4 border-b border-slate-700">
+          Job History
+        </h2>
         <div className="divide-y divide-slate-700">
           {jobs.map((j) => (
-            <div key={j.job_id} className="p-4 flex items-center justify-between text-sm">
+            <div
+              key={j.job_id}
+              className="p-4 flex items-center justify-between text-sm"
+            >
               <div>
                 <span className="font-medium">{j.scene_name}</span>
                 <span className="text-slate-500 ml-2">#{j.job_id}</span>
               </div>
               <div className="flex items-center gap-3">
-                <span className={`px-2 py-0.5 rounded text-xs font-medium ${j.running ? "bg-green-900 text-green-300" : "bg-slate-700 text-slate-400"}`}>
+                <span
+                  className={`px-2 py-0.5 rounded text-xs font-medium ${j.running ? "bg-green-900 text-green-300" : "bg-slate-700 text-slate-400"}`}
+                >
                   {j.running ? "Running" : "Stopped"}
                 </span>
                 {j.running && (
-                  <button onClick={() => handleStop(j.job_id)} className="text-red-400 hover:text-red-300 text-xs">Stop</button>
+                  <button
+                    type="button"
+                    onClick={() => handleStop(j.job_id)}
+                    className="text-red-400 hover:text-red-300 text-xs"
+                  >
+                    Stop
+                  </button>
                 )}
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { API_BASE } from "../lib/api";
 
 interface Status {
@@ -24,14 +24,14 @@ export default function Dashboard() {
 
   const fetchStatus = useCallback(async () => {
     try {
-      const r = await fetch(API_BASE + "/api/status");
+      const r = await fetch(`${API_BASE}/api/status`);
       if (r.ok) setStatus(await r.json());
     } catch {}
   }, []);
 
   const fetchJobs = useCallback(async () => {
     try {
-      const r = await fetch(API_BASE + "/api/simulations");
+      const r = await fetch(`${API_BASE}/api/simulations`);
       if (r.ok) {
         const data = await r.json();
         setJobs([...(data.active || []), ...(data.completed || [])]);
@@ -49,7 +49,7 @@ export default function Dashboard() {
   const handleAiExecute = async () => {
     setAiResult("Thinking...");
     try {
-      const r = await fetch(API_BASE + "/api/llm/chat", {
+      const r = await fetch(`${API_BASE}/api/llm/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -70,14 +70,26 @@ export default function Dashboard() {
 
       <div className="grid grid-cols-4 gap-4 mb-8">
         {[
-          { label: "Isaac Sim", value: status?.isaac_version ?? (status?.isaac_available ? "Available" : "N/A") },
+          {
+            label: "Isaac Sim",
+            value:
+              status?.isaac_version ??
+              (status?.isaac_available ? "Available" : "N/A"),
+          },
           { label: "GPU", value: status?.gpus?.[0]?.split(",")[0] ?? "N/A" },
           { label: "Scenes in Depot", value: status?.scenes_in_depot ?? "..." },
           { label: "Active Jobs", value: status?.active_jobs ?? "..." },
         ].map((c) => (
-          <div key={c.label} className="bg-slate-800 rounded-xl p-4 border border-slate-700">
-            <div className="text-xs text-slate-400 uppercase tracking-wider">{c.label}</div>
-            <div className="text-2xl font-bold mt-1 text-cyan-300">{c.value}</div>
+          <div
+            key={c.label}
+            className="bg-slate-800 rounded-xl p-4 border border-slate-700"
+          >
+            <div className="text-xs text-slate-400 uppercase tracking-wider">
+              {c.label}
+            </div>
+            <div className="text-2xl font-bold mt-1 text-cyan-300">
+              {c.value}
+            </div>
           </div>
         ))}
       </div>
@@ -93,6 +105,7 @@ export default function Dashboard() {
             onKeyDown={(e) => e.key === "Enter" && handleAiExecute()}
           />
           <button
+            type="button"
             onClick={handleAiExecute}
             className="bg-cyan-700 hover:bg-cyan-600 text-white px-4 py-2 rounded-lg text-sm font-medium"
           >
@@ -107,13 +120,20 @@ export default function Dashboard() {
       </div>
 
       <div className="bg-slate-800 rounded-xl border border-slate-700">
-        <h2 className="text-lg font-semibold p-4 border-b border-slate-700">Active Jobs</h2>
+        <h2 className="text-lg font-semibold p-4 border-b border-slate-700">
+          Active Jobs
+        </h2>
         <div className="divide-y divide-slate-700">
           {jobs.length === 0 && (
-            <div className="p-4 text-sm text-slate-500">No jobs yet. Start a simulation from the Simulations page.</div>
+            <div className="p-4 text-sm text-slate-500">
+              No jobs yet. Start a simulation from the Simulations page.
+            </div>
           )}
           {jobs.map((job) => (
-            <div key={job.job_id} className="p-4 flex items-center justify-between text-sm">
+            <div
+              key={job.job_id}
+              className="p-4 flex items-center justify-between text-sm"
+            >
               <div>
                 <span className="font-medium">{job.scene_name}</span>
                 <span className="text-slate-500 ml-2">#{job.job_id}</span>
@@ -125,7 +145,11 @@ export default function Dashboard() {
                     : "bg-slate-700 text-slate-400"
                 }`}
               >
-                {job.running ? "Running" : job.completed ? "Completed" : "Stopped"}
+                {job.running
+                  ? "Running"
+                  : job.completed
+                    ? "Completed"
+                    : "Stopped"}
               </span>
             </div>
           ))}
