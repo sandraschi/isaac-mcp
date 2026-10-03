@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import re
 import shutil
@@ -9,6 +10,21 @@ from pathlib import Path
 
 import httpx
 from fastmcp import Context, FastMCP
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("isaac-mcp")
+
+
+def _fail(error: str) -> dict:
+    """Dialogic failure shape: machine-readable error + human message twin."""
+    logger.warning("tool failure: %s", error)
+    return {"success": False, "error": error, "message": error}
+
+
+def _ok(payload: dict, message: str) -> dict:
+    """Dialogic success shape: payload merged with a human message."""
+    return {"success": True, "message": message, **payload}
+
 
 mcp = FastMCP("isaac-mcp")
 
@@ -67,6 +83,7 @@ def _isaac_version() -> str | None:
         )
         return r.stdout.strip() or "unknown"
     except Exception:
+        logger.debug("Isaac version probe failed (Isaac likely absent)")
         return None
 
 
@@ -132,18 +149,21 @@ def sim_status() -> dict:
     version = _isaac_version() if isaac_py else None
     gpus = _gpu_info()
 
-    return {
-        "isaac_available": omni_ok or isaac_py is not None,
-        "isaac_version": version,
-        "isaac_python": str(isaac_py) if isaac_py else None,
-        "gpus": gpus,
-        "scenes_dir_exists": SCENES_DIR.exists(),
-        "scenes_in_depot": len(_load_depot()),
-        "active_jobs": sum(
-            1 for j in _jobs.values() if j.get("process") and j["process"].poll() is None
-        ),
-        "jobs_dir_exists": JOBS_DIR.exists(),
-    }
+    return _ok(
+        {
+            "isaac_available": omni_ok or isaac_py is not None,
+            "isaac_version": version,
+            "isaac_python": str(isaac_py) if isaac_py else None,
+            "gpus": gpus,
+            "scenes_dir_exists": SCENES_DIR.exists(),
+            "scenes_in_depot": len(_load_depot()),
+            "active_jobs": sum(
+                1 for j in _jobs.values() if j.get("process") and j["process"].poll() is None
+            ),
+            "jobs_dir_exists": JOBS_DIR.exists(),
+        },
+        "Isaac Sim status retrieved.",
+    )
 
 
 @mcp.tool(
@@ -184,14 +204,17 @@ def load_scene(uri: str, name: str) -> dict:
     else:
         src = Path(uri)
         if not src.exists():
-            return {"success": False, "error": f"File not found: {uri}"}
+            return _fail(f"File not found: {uri}")
         shutil.copy2(src, dest)
 
     size_kb = round(dest.stat().st_size / 1024, 1)
     depot[name] = {"uri": uri, "path": str(dest.resolve()), "size_kb": size_kb, "format": ext}
     _save_depot(depot)
 
-    return {"success": True, "name": name, "path": str(dest), "size_kb": size_kb, "format": ext}
+    return _ok(
+        {"name": name, "path": str(dest), "size_kb": size_kb, "format": ext},
+        f"Scene '{name}' loaded ({size_kb} KB).",
+    )
 
 
 @mcp.tool(
@@ -221,9 +244,9 @@ def spawn_model(uri: str, name: str, scene: str = "") -> dict:
     """
     depot = _load_depot()
     if scene and scene not in depot:
-        return {"success": False, "error": f"Scene '{scene}' not found in depot"}
+        return _fail(f"Scene '{scene}' not found in depot")
     if not depot:
-        return {"success": False, "error": "No scenes in depot. Load a scene first."}
+        return _fail("No scenes in depot. Load a scene first.")
 
     target_scene = scene or list(depot.keys())[0]
     scene_dir = SCENES_DIR / target_scene / "models"
@@ -239,10 +262,14 @@ def spawn_model(uri: str, name: str, scene: str = "") -> dict:
     else:
         src = Path(uri)
         if not src.exists():
-            return {"success": False, "error": f"File not found: {uri}"}
+            return _fail(f"File not found: {uri}")
         shutil.copy2(src, dest)
 
-    return {"success": True, "name": name, "scene": target_scene, "path": str(dest), "format": ext}
+    logger.info("spawn_model: %s into scene %s", name, target_scene)
+    return _ok(
+        {"name": name, "scene": target_scene, "path": str(dest), "format": ext},
+        f"Model '{name}' spawned into scene '{target_scene}'.",
+    )
 
 
 @mcp.tool(
@@ -271,18 +298,15 @@ def start_sim(scene_name: str, headless: bool = True) -> dict:
     """
     depot = _load_depot()
     if scene_name not in depot:
-        return {"success": False, "error": f"Scene '{scene_name}' not found in depot"}
+        return _fail(f"Scene '{scene_name}' not found in depot")
 
     isaac_py = _find_isaac_python()
     if not isaac_py:
-        return {
-            "success": False,
-            "error": "Isaac Sim Python not found. Install Isaac Sim or set ISAAC_SIM_PATH.",
-        }
+        return _fail("Isaac Sim Python not found. Install Isaac Sim or set ISAAC_SIM_PATH.")
 
     runner = Path(__file__).parent / "_sim_runner.py"
     if not runner.exists():
-        return {"success": False, "error": f"Sim runner not found at {runner}"}
+        return _fail(f"Sim runner not found at {runner}")
 
     job_id = uuid.uuid4().hex[:8]
     job_dir = JOBS_DIR / job_id
@@ -324,15 +348,23 @@ def start_sim(scene_name: str, headless: bool = True) -> dict:
             break
         if proc.poll() is not None:
             tail = log_path.read_text(encoding="utf-8", errors="replace").splitlines()[-15:]
+            logger.warning("start_sim: job %s runner exited immediately", job_id)
             return {
                 "success": False,
                 "error": f"Runner exited immediately ({proc.returncode}).",
+                "message": f"Runner exited immediately ({proc.returncode}). See log_tail.",
                 "log_tail": tail,
             }
         time.sleep(0.25)
 
+    logger.info(
+        "start_sim: job %s scene %s headless=%s loaded=%s", job_id, scene_name, headless, loaded
+    )
     return {
         "success": True,
+        "message": f"Simulation started (job {job_id})."
+        if loaded
+        else f"Simulation starting (job {job_id}); poll get_state or list_jobs.",
         "job_id": job_id,
         "scene_name": scene_name,
         "headless": headless,
@@ -364,7 +396,7 @@ def stop_sim(job_id: str) -> dict:
     """
     job_dir = JOBS_DIR / job_id
     if not job_dir.exists():
-        return {"success": False, "error": f"Job '{job_id}' not found"}
+        return _fail(f"Job '{job_id}' not found")
 
     (job_dir / "stop.signal").touch()
 
@@ -379,7 +411,11 @@ def stop_sim(job_id: str) -> dict:
         _jobs[job_id]["process"] = None
 
     completed = (job_dir / "completed.txt").exists()
-    return {"success": True, "job_id": job_id, "stopped": True, "completed": completed}
+    logger.info("stop_sim: job %s stopped (completed=%s)", job_id, completed)
+    return _ok(
+        {"job_id": job_id, "stopped": True, "completed": completed},
+        f"Simulation {job_id} stopped.",
+    )
 
 
 @mcp.tool(
@@ -447,10 +483,15 @@ def get_state(job_id: str) -> dict:
     """
     state_path = JOBS_DIR / job_id / "state.json"
     if not state_path.exists():
-        return {"success": False, "error": f"No state data for job '{job_id}'"}
+        return _fail(f"No state data for job '{job_id}'")
 
     state = json.loads(state_path.read_text())
-    return {"success": True, "job_id": job_id, **state}
+    return {
+        "success": True,
+        "message": f"State retrieved for job {job_id}.",
+        "job_id": job_id,
+        **state,
+    }
 
 
 @mcp.tool(
@@ -476,10 +517,13 @@ def apply_control(job_id: str, ctrl: dict) -> dict:
     """
     job_dir = JOBS_DIR / job_id
     if not job_dir.exists():
-        return {"success": False, "error": f"Job '{job_id}' not found"}
+        return _fail(f"Job '{job_id}' not found")
 
     (job_dir / "control.json").write_text(json.dumps(ctrl))
-    return {"success": True, "job_id": job_id, "applied": list(ctrl.keys())}
+    return _ok(
+        {"job_id": job_id, "applied": list(ctrl.keys())},
+        f"Applied {len(ctrl)} actuator commands to job {job_id}.",
+    )
 
 
 @mcp.tool(
@@ -502,7 +546,12 @@ def list_scenes() -> dict:
     ```
     """
     depot = _load_depot()
-    return {"success": True, "scenes": depot, "count": len(depot)}
+    return {
+        "success": True,
+        "message": f"{len(depot)} scene(s) in depot.",
+        "scenes": depot,
+        "count": len(depot),
+    }
 
 
 @mcp.tool(
@@ -551,6 +600,7 @@ def list_jobs() -> dict:
 
     return {
         "success": True,
+        "message": f"{len(active) + len(completed)} job(s) tracked.",
         "active": active,
         "completed": completed,
         "total": len(active) + len(completed),
@@ -644,6 +694,7 @@ After completion, summarize what happened and any observations."""
             "sampling_used": True,
         }
     except Exception as e:
+        logger.exception("ctx.sample failed; falling back to Ollama")
         try:
             resp = httpx.post(
                 "http://127.0.0.1:11434/api/generate",
@@ -710,6 +761,7 @@ Example: {{"shoulder_joint": 0.5, "elbow_joint": -0.3}}"""
         text = getattr(result, "text", None) or str(result)
         sampling_used = True
     except Exception:
+        logger.exception("ctx.sample unavailable; falling back to Ollama")
         try:
             resp = httpx.post(
                 "http://127.0.0.1:11434/api/generate",
@@ -792,6 +844,7 @@ Describe in plain English:
             "sampling_used": True,
         }
     except Exception:
+        logger.exception("ctx.sample unavailable; falling back to Ollama")
         try:
             resp = httpx.post(
                 "http://127.0.0.1:11434/api/generate",
@@ -878,6 +931,7 @@ Provide:
             "sampling_used": True,
         }
     except Exception:
+        logger.exception("ctx.sample unavailable; falling back to Ollama")
         try:
             resp = httpx.post(
                 "http://127.0.0.1:11434/api/generate",
@@ -927,6 +981,7 @@ Example: ["https://raw.githubusercontent.com/NVIDIA-Omniverse/IsaacSim-omni.isaa
         result = await ctx.sample(prompt)
         urls = _extract_json_array(getattr(result, "text", None) or str(result))
     except Exception:
+        logger.exception("ctx.sample unavailable; falling back to Ollama")
         try:
             resp = httpx.post(
                 "http://127.0.0.1:11434/api/generate",
@@ -935,6 +990,7 @@ Example: ["https://raw.githubusercontent.com/NVIDIA-Omniverse/IsaacSim-omni.isaa
             )
             urls = _extract_json_array(resp.json().get("response", ""))
         except Exception:
+            logger.exception("Ollama fallback failed for model discovery")
             return {"success": False, "message": "LLM unavailable for model discovery."}
 
     if not urls:
@@ -970,6 +1026,39 @@ Example: ["https://raw.githubusercontent.com/NVIDIA-Omniverse/IsaacSim-omni.isaa
         "models_loaded": loaded,
         "urls_tried": urls,
     }
+
+
+@mcp.resource("isaac://depot")
+def depot_resource() -> str:
+    """Scene depot registry snapshot (JSON)."""
+    return json.dumps(_load_depot(), indent=2)
+
+
+@mcp.prompt()
+def sim_quickstart(goal: str = "run a first simulation") -> str:
+    """Starter prompt for Isaac Sim workflows via isaac-mcp.
+
+    ## Return Format
+    Prompt text guiding load -> start -> control -> stop.
+
+    ## Examples
+    sim_quickstart("drive the Franka Panda arm")
+    """
+    return (
+        f"You are driving NVIDIA Isaac Sim through isaac-mcp. Goal: {goal}\n"
+        "1. sim_status() to confirm the Isaac interpreter and GPUs.\n"
+        "2. load_scene(uri, name), then start_sim(name) for a job_id.\n"
+        "3. get_state(job_id) for joint names, apply_control(job_id, {...}) to move.\n"
+        "4. stop_sim(job_id) when done; analyze_sim_logs(job_id) on crashes."
+    )
+
+
+try:
+    from isaac_mcp.prefab_cards import register_prefab_cards
+
+    register_prefab_cards(mcp)
+except Exception as prefab_exc:
+    logger.info("Prefab cards not loaded: %s", prefab_exc)
 
 
 def main():
