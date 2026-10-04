@@ -54,6 +54,9 @@ uv run python -m isaac_mcp
 | 13 | `analyze_sim_logs` | Parse Isaac Sim / Omniverse logs for GPU errors and warnings |
 | 14 | `discover_model` | Search and download USD assets from GitHub |
 | 15 | `isaac_shutdown` | Stop active sims and terminate the server (confirmed=true) |
+| 16 | `show_sim_status_card` | Prefab card: Isaac/GPU/depot status |
+| 17 | `show_scenes_card` | Prefab card: scene depot contents |
+| 18 | `show_jobs_card` | Prefab card: active + completed jobs |
 
 [Full tool reference →](docs/TOOLS.md)
 
@@ -81,7 +84,7 @@ MCP Client  ──►  isaac-mcp (FastMCP 3.2)
 
 | Doc | Contents |
 |-----|----------|
-| `docs/TOOLS.md` | Full reference for all 14 tools with inputs, outputs, examples |
+| `docs/TOOLS.md` | Full reference for all 18 tools with inputs, outputs, examples |
 | `docs/SETUP.md` | Installation, NVIDIA driver requirements, Isaac Sim setup, troubleshooting |
 | `docs/ISAAC_VS_OTHERS.md` | Comparison with MuJoCo, Gazebo, and other physics backends |
 

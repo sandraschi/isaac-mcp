@@ -1,6 +1,6 @@
 # isaac-mcp Tool Reference
 
-14 tools: 9 simulation lifecycle + 5 AI workflow assistants.
+18 tools: 10 simulation lifecycle + 5 AI workflow assistants + 3 Prefab cards.
 
 **Note:** All tools require NVIDIA Isaac Sim to be installed (see SETUP.md). The server auto-detects Isaac Sim's Python interpreter.
 
@@ -328,3 +328,42 @@ await analyze_sim_logs(job_id="a1b2c3d4")
 await discover_model(description="Franka Panda robot URDF")
 await discover_model(description="Boston Dynamics Spot USD model")
 ```
+
+---
+
+### isaac_shutdown
+
+**Description:** Stop active sims, then terminate the server. Refuses without `confirmed=true`.
+
+**Inputs:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| confirmed | bool | Yes | Must be `true` |
+
+**Output:**
+```json
+{"success": true, "stopped_jobs": ["a1b2c3d4"], "message": "isaac-mcp server terminating."}
+```
+
+**Examples:**
+```python
+isaac_shutdown(confirmed=True)
+```
+
+---
+
+## Prefab Cards (16-18, `app=True`)
+
+Rich in-chat cards for Prefab-capable MCP clients, registered from
+`src/isaac_mcp/prefab_cards.py` (requires the `prefab-ui` dependency).
+
+| # | Tool | Shows |
+|---|------|-------|
+| 16 | `show_sim_status_card` | Isaac availability, version, GPUs, depot/job counts |
+| 17 | `show_scenes_card` | Depot scenes with format/size badges |
+| 18 | `show_jobs_card` | Active + completed jobs |
+
+## Resource & Prompt
+
+- `isaac://depot` (resource) — scene depot registry snapshot (JSON).
+- `sim_quickstart(goal)` (prompt) — load → start → control → stop starter text.

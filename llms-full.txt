@@ -1,7 +1,7 @@
 # isaac-mcp — full reference (llms.txt points here)
 
 NVIDIA Isaac Sim/Lab simulation via MCP. GPU-accelerated PhysX physics, USD
-scenes, file-protocol job isolation. 15 tools (9 sim + 5 AI + shutdown).
+scenes, file-protocol job isolation. 18 tools (10 sim + 5 AI + 3 Prefab).
 
 ## Sim tools (9)
 
@@ -44,10 +44,10 @@ ISAAC_MCP_HOST/ISAAC_MCP_PORT (default 127.0.0.1:11049).
 
 ## Layout
 
-- src/isaac_mcp/server.py — 15 MCP tools; _sim_runner.py — Isaac subprocess
+- src/isaac_mcp/server.py — 18 MCP tools (+ prefab_cards.py); _sim_runner.py — Isaac subprocess
   (file protocol: metadata.json, state.json, control.json, stop.signal,
   completed.txt, error.txt, runner.log)
-- web_sota/backend/server.py — FastAPI; web_sota/src/ — 7 React pages
+- web_sota/backend/server.py — FastAPI; web_sota/src/ — 12 React pages
 - native/ — Tauri shell (backend 11049); scenes/, jobs/ — runtime data
 - Skills: skills/isaac/SKILL.md (served via GET /api/skills)
 

@@ -2,7 +2,7 @@
 
 ## What this is
 General-purpose NVIDIA Isaac Sim/Lab simulation via MCP. Start, control, and
-query Isaac Sim simulations through MCP tools. 14 tools total (9 sim + 5 AI).
+query Isaac Sim simulations through MCP tools. 18 tools total (10 sim + 5 AI + 3 Prefab).
 
 ## Key paths
 - `src/isaac_mcp/server.py` — 14 MCP tools
