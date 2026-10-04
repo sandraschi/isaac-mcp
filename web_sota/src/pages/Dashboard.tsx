@@ -21,6 +21,11 @@ export default function Dashboard() {
   const [jobs, setJobs] = useState<Job[]>([]);
   const [aiPrompt, setAiPrompt] = useState("");
   const [aiResult, setAiResult] = useState("");
+  const [onboarding, setOnboarding] = useState<{
+    message: string;
+    next_steps: string[];
+  } | null>(null);
+  const [llmOk, setLlmOk] = useState<boolean | null>(null);
 
   const fetchStatus = useCallback(async () => {
     try {
@@ -42,6 +47,24 @@ export default function Dashboard() {
   useEffect(() => {
     fetchStatus();
     fetchJobs();
+    fetch(`${API_BASE}/api/llm/onboarding`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d)
+          setOnboarding({ message: d.message, next_steps: d.next_steps || [] });
+      })
+      .catch(() => {});
+    fetch(`${API_BASE}/api/llm/discover`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) =>
+        setLlmOk(
+          !!d &&
+            (d.providers || []).some(
+              (p: { reachable: boolean }) => p.reachable,
+            ),
+        ),
+      )
+      .catch(() => setLlmOk(false));
     const iv = setInterval(fetchJobs, 3000);
     return () => clearInterval(iv);
   }, [fetchStatus, fetchJobs]);
@@ -100,6 +123,41 @@ export default function Dashboard() {
           </div>
         ))}
       </div>
+
+      {status && (!status.isaac_available || llmOk === false) && (
+        <div
+          className="bg-red-950/40 border border-red-800 rounded-xl p-5 mb-8"
+          data-testid="onboarding-cue"
+        >
+          <h2 className="text-lg font-semibold mb-2 text-red-200">
+            Finish setup to unlock simulations
+          </h2>
+          <p className="text-sm text-slate-300 mb-3">
+            {onboarding?.message ||
+              "Point isaac-mcp at Isaac Sim, then chat with your robot."}
+          </p>
+          {!status.isaac_available && (
+            <p className="text-sm text-slate-400 mb-2">
+              Isaac Sim not detected — set ISAAC_SIM_PATH (see .env.example).
+            </p>
+          )}
+          {llmOk === false && (
+            <p className="text-sm text-slate-400 mb-2">
+              No local LLM reachable — start Ollama on :11434 for the AI tools.
+            </p>
+          )}
+          {(onboarding?.next_steps || []).length > 0 && (
+            <ul className="list-disc ml-5 text-sm text-slate-400 mb-3">
+              {(onboarding?.next_steps || []).map((step) => (
+                <li key={step}>{step}</li>
+              ))}
+            </ul>
+          )}
+          <a href="/help" className="text-sm text-cyan-300 hover:text-cyan-200">
+            Open the setup guide
+          </a>
+        </div>
+      )}
 
       <div className="bg-slate-800 rounded-xl p-5 border border-slate-700 mb-8">
         <h2 className="text-lg font-semibold mb-3">Quick AI Workflow</h2>
