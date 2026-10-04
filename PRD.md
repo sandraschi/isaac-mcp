@@ -1,8 +1,8 @@
 # isaac-mcp — Product Requirements Document
 
-**Version**: 0.2.0-alpha  
-**Status**: Active  
-**Last Updated**: 2026-06-11  
+**Version**: 0.2.0
+**Status**: Active
+**Last Updated**: 2026-10-04
 
 ## 1. Purpose
 
@@ -23,7 +23,9 @@ General-purpose NVIDIA Isaac Sim/Lab simulation via MCP. Start, control, and que
 | Natural language control | P1 | NL → actuator values |
 | Conversational analysis | P1 | LLM reads state + logs, diagnoses issues |
 | Smart model discovery | P2 | LLM generates USD/URDF URLs from GitHub |
-| Web dashboard | P2 | React + Vite at 11048 |
+| Web dashboard | P2 | React + Vite at 11048 (12 pages: Dashboard, Simulations, Models, Inbox, Tools, Skills, Chat, Apps, Logging, LLM, Settings, Help) |
+| Prefab cards | P2 | app=True in-chat cards (status, scenes, jobs) |
+| Onboarding | P1 | docs/ONBOARDING.md + under-hero cue + MOCK-until-onboarded |
 | CI | P1 | ruff lint + pytest on push/PR |
 
 ### Out of scope (future)
@@ -41,9 +43,9 @@ MCP client -> FastMCP (11049) -> subprocess (isaac_sim runner)
                                    -> state sync via JSON over pipe
 ```
 
-## 4. Tools (14 total)
+## 4. Tools (18 total)
 
-### Sim Tools (9)
+### Sim Tools (10)
 - `sim_status` — health check (Isaac Python, GPU, depot)
 - `load_scene` — load USD/URDF scene into depot
 - `start_sim` — launch Isaac Sim as subprocess
@@ -53,6 +55,7 @@ MCP client -> FastMCP (11049) -> subprocess (isaac_sim runner)
 - `apply_control` — send control signals to actuators
 - `list_scenes` — list all scenes in the depot
 - `list_jobs` — list active/completed simulation jobs
+- `isaac_shutdown` — stop sims, terminate server (confirmed=true)
 
 ### AI Tools (5)
 - `agentic_sim_workflow` — multi-step orchestration via host LLM
@@ -60,6 +63,15 @@ MCP client -> FastMCP (11049) -> subprocess (isaac_sim runner)
 - `analyze_sim_state` — describe robot posture/behaviour
 - `analyze_sim_logs` — diagnose sim errors
 - `discover_model` — find + download USD/URDF from GitHub
+
+### Prefab Cards (3, `app=True`)
+- `show_sim_status_card` — Isaac/GPU/depot status card
+- `show_scenes_card` — scene depot card
+- `show_jobs_card` — active + completed jobs card
+
+### Resource & Prompt
+- `isaac://depot` (resource) — depot registry snapshot
+- `sim_quickstart(goal)` (prompt) — starter workflow text
 
 ## 5. Ports
 
@@ -79,7 +91,8 @@ MCP client -> FastMCP (11049) -> subprocess (isaac_sim runner)
 | Dependency | Purpose |
 |-----------|---------|
 | NVIDIA Isaac Sim | Simulator (NVIDIA EULA) |
-| FastMCP | MCP server framework |
+| FastMCP | MCP server framework (>=3.4.4,<4) |
+| prefab-ui | In-chat Prefab cards |
 | httpx | HTTP downloads |
 | Ollama (optional) | AI fallback when ctx.sample unavailable |
 

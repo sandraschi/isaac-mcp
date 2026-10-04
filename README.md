@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/sandraschi/isaac-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/sandraschi/isaac-mcp/actions/workflows/ci.yml)
 [![Ruff](https://img.shields.io/badge/code%20style-ruff-000000.svg)](https://github.com/astral-sh/ruff)
-[![FastMCP](https://img.shields.io/badge/FastMCP-3.2+-blue)](https://github.com/jlowin/fastmcp)
+[![FastMCP](https://img.shields.io/badge/FastMCP-3.4+-blue)](https://github.com/jlowin/fastmcp)
 [![Python](https://img.shields.io/badge/python-3.11%2B-blue)](https://www.python.org)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue)](LICENSE)
 
@@ -65,7 +65,7 @@ uv run python -m isaac_mcp
 isaac-mcp connects to either a running Isaac Sim GUI instance (via Python bindings) or launches Isaac Lab headless (`isaaclab` Python package). Job isolation is managed per-GPU process with Omniverse Kit subprocesses. USD scenes are cached in `scenes/` and can reference assets from the Omniverse Nucleus server or local depot.
 
 ```
-MCP Client  ──►  isaac-mcp (FastMCP 3.2)
+MCP Client  ──►  isaac-mcp (FastMCP 3.4)
                         │
               ┌─────────┴──────────┐
               │  Job Scheduler      │
@@ -86,6 +86,10 @@ MCP Client  ──►  isaac-mcp (FastMCP 3.2)
 |-----|----------|
 | `docs/TOOLS.md` | Full reference for all 18 tools with inputs, outputs, examples |
 | `docs/SETUP.md` | Installation, NVIDIA driver requirements, Isaac Sim setup, troubleshooting |
+| `docs/ONBOARDING.md` | Zero-to-sim guide: wrappee install, env, sanity checklist |
+| `docs/CONFIGURATION.md` | Env vars, ports, launcher, interpreter resolution, logging |
+| `docs/DEVELOPMENT.md` | Setup, commands, architecture, conventions |
+| `docs/TROUBLESHOOTING.md` | Sim/startup/dashboard/CI failure table |
 | `docs/ISAAC_VS_OTHERS.md` | Comparison with MuJoCo, Gazebo, and other physics backends |
 
 ## Ports

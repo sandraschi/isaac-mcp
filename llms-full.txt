@@ -32,6 +32,7 @@ scenes, file-protocol job isolation. 18 tools (10 sim + 5 AI + 3 Prefab).
 - GET /api/simulations, POST /api/jobs/start {scene_name, headless?},
   POST /api/jobs/{id}/stop, POST /api/shutdown (orderly exit for launcher)
 - GET /api/skills (skills/*/SKILL.md), GET /api/v1/diagnostics (CUA-NSIS)
+- GET /api/fleet/apps (fleet registry discovery, live-self badge)
 - AI: POST /api/ai/workflow|nl-control|analyze-state|analyze-logs|discover-model
 - LLM: GET /api/llm/providers|discover|models|onboarding, POST /api/llm/chat
 - Logs: GET /api/logs|/stats|/export, DELETE /api/logs. MCP HTTP mounted /mcp.
