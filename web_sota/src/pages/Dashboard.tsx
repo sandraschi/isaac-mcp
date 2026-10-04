@@ -153,8 +153,11 @@ export default function Dashboard() {
               ))}
             </ul>
           )}
-          <a href="/help" className="text-sm text-cyan-300 hover:text-cyan-200">
-            Open the setup guide
+          <a
+            href="/setup"
+            className="text-sm text-cyan-300 hover:text-cyan-200"
+          >
+            Open the setup wizard
           </a>
         </div>
       )}

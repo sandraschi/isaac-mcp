@@ -18,12 +18,14 @@ import LLM from "./pages/LLM";
 import Logging from "./pages/Logging";
 import Models from "./pages/Models";
 import Settings from "./pages/Settings";
+import Setup from "./pages/Setup";
 import Simulations from "./pages/Simulations";
 import Skills from "./pages/Skills";
 import Tools from "./pages/Tools";
 
 const navItems = [
   { to: "/", label: "Dashboard", icon: "🏠" },
+  { to: "/setup", label: "Setup", icon: "🧭" },
   { to: "/simulations", label: "Simulations", icon: "🎮" },
   { to: "/models", label: "Models", icon: "📦" },
   { to: "/inbox", label: "Inbox", icon: "📥" },
@@ -169,6 +171,7 @@ function Shell() {
       <main className="flex-1 p-6 overflow-auto">
         <Routes>
           <Route path="/" element={<Dashboard />} />
+          <Route path="/setup" element={<Setup />} />
           <Route path="/simulations" element={<Simulations />} />
           <Route path="/models" element={<Models />} />
           <Route path="/inbox" element={<Inbox />} />

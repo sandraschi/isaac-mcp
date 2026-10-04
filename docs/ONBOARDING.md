@@ -17,7 +17,8 @@ Get from zero to a running GPU simulation in ~20 minutes (plus Isaac download).
 1. Clone + `uv sync`, copy `.env.example` to `.env`.
 2. Set `ISAAC_SIM_PATH` (or `ISAAC_PYTHON` for a pip venv).
 3. Binary installs: run `scripts/first_launch.ps1` once (EULA + extension pull).
-4. `.\web_sota\start.ps1`, open :11048. Dashboard hero walks you from here.
+4. `.\web_sota\start.ps1`, open :11048. Dashboard hero walks you from here —
+   or open the Setup wizard at `/setup` for a guided detect → act → verify flow.
 5. Sanity check: `sim_status()` shows `isaac_available: true` and your GPUs;
    load any `.usd` on Models, `start_sim`, `get_state`, `stop_sim`.
 
