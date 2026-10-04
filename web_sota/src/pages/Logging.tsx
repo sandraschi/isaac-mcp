@@ -135,7 +135,7 @@ export default function Logging() {
   const currentPage = Math.floor(offset / limit) + 1;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4" data-testid="logging-page">
       {/* Controls bar */}
       <div className="flex flex-wrap items-center gap-3">
         <h2 className="text-lg font-bold text-slate-200 mr-2">Logs</h2>
@@ -177,6 +177,7 @@ export default function Logging() {
           placeholder="Search..."
           value={search}
           onChange={(e) => handleSearch(e.target.value)}
+          data-testid="logging-search"
         />
 
         <select
@@ -197,6 +198,7 @@ export default function Logging() {
           type="button"
           className={`h-8 rounded px-3 text-xs font-medium ${tail ? "bg-emerald-600 text-white" : "border border-slate-700 text-slate-400 hover:bg-slate-800"}`}
           onClick={() => setTail(!tail)}
+          data-testid="logging-tail"
         >
           {tail ? "LIVE" : "Tail"}
         </button>

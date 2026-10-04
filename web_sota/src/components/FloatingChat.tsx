@@ -168,14 +168,14 @@ export default function FloatingChat() {
             <div className="flex items-center gap-2">
               <span className="text-sm font-semibold text-slate-200">Chat</span>
               {skillName && (
-                <span className="text-[10px] bg-cyan-900 text-cyan-300 px-1.5 py-0.5 rounded-full">
+                <span className="text-xs bg-cyan-900 text-cyan-300 px-1.5 py-0.5 rounded-full">
                   {skillName}
                 </span>
               )}
             </div>
             <div className="flex items-center gap-1.5">
               <select
-                className="bg-slate-800 border border-slate-600 rounded text-[10px] px-1.5 py-1 text-slate-300 max-w-[80px]"
+                className="bg-slate-800 border border-slate-600 rounded text-xs px-1.5 py-1 text-slate-300 max-w-[80px]"
                 value={personality}
                 onChange={(e) => {
                   setPersonality(e.target.value);
@@ -190,7 +190,7 @@ export default function FloatingChat() {
               </select>
               {modelList.length > 0 && (
                 <select
-                  className="bg-slate-800 border border-slate-600 rounded text-xs px-2 py-1 text-slate-300 max-w-[140px]"
+                  className="bg-slate-800 border border-slate-600 rounded text-sm px-2 py-1 text-slate-300 max-w-[140px]"
                   value={model}
                   onChange={(e) => {
                     setStoreModel(e.target.value);
@@ -206,7 +206,7 @@ export default function FloatingChat() {
               <button
                 type="button"
                 onClick={() => setOpen(false)}
-                className="text-slate-500 hover:text-slate-300 text-lg leading-none"
+                className="text-slate-300 hover:text-slate-300 text-lg leading-none"
               >
                 &times;
               </button>
@@ -215,7 +215,7 @@ export default function FloatingChat() {
           <div className="flex-1 overflow-y-auto p-3 space-y-2 text-sm">
             {chat.length === 0 && (
               <div className="text-center pt-4">
-                <p className="text-slate-500 text-xs mb-3">
+                <p className="text-slate-300 text-sm mb-3">
                   Ask a question about this simulation.
                 </p>
                 <div
@@ -229,7 +229,7 @@ export default function FloatingChat() {
                       onClick={() => {
                         setInput(ex);
                       }}
-                      className="bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-slate-200 text-[10px] px-2 py-1 rounded-full border border-slate-700 transition-colors"
+                      className="bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-slate-200 text-xs px-2 py-1 rounded-full border border-slate-700 transition-colors"
                     >
                       {ex}
                     </button>
@@ -254,7 +254,7 @@ export default function FloatingChat() {
               </div>
             ))}
             {loading && (
-              <div className="text-slate-500 text-xs animate-pulse">
+              <div className="text-slate-300 text-sm animate-pulse">
                 Thinking...
               </div>
             )}
@@ -285,7 +285,7 @@ export default function FloatingChat() {
                 type="button"
                 onClick={handleExport}
                 disabled={chat.length === 0}
-                className="text-slate-500 hover:text-slate-300 disabled:text-slate-700 text-xs px-1.5 py-1 rounded"
+                className="text-slate-300 hover:text-slate-300 disabled:text-slate-700 text-sm px-1.5 py-1 rounded"
                 title="Export chat"
               >
                 <svg
@@ -309,7 +309,7 @@ export default function FloatingChat() {
                 type="button"
                 onClick={handleClear}
                 disabled={chat.length === 0}
-                className="text-slate-500 hover:text-slate-300 disabled:text-slate-700 text-xs px-1.5 py-1 rounded"
+                className="text-slate-300 hover:text-slate-300 disabled:text-slate-700 text-sm px-1.5 py-1 rounded"
                 title="Clear chat"
                 data-testid="floating-chat-clear"
               >
