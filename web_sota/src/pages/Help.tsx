@@ -258,7 +258,7 @@ Isaac Sim runner (Python 3.11 + isaacsim)
             NVIDIA GPU Required
           </span>
           <span className="px-2 py-1 bg-purple-100 text-purple-800 text-xs rounded-full font-medium">
-            14 tools
+            18 tools
           </span>
           <span className="px-2 py-1 bg-red-100 text-red-800 text-xs rounded-full font-medium">
             Isaac Sim 5.1

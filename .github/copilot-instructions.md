@@ -1,6 +1,6 @@
 # isaac-mcp — Copilot instructions
 
-You are working in isaac-mcp: NVIDIA Isaac Sim/Lab behind 15 MCP tools
+You are working in isaac-mcp: NVIDIA Isaac Sim/Lab behind 18 MCP tools
 (src/isaac_mcp/server.py) plus a FastAPI dashboard backend (web_sota/backend/).
 
 - Before starting work: check `sim_status()` semantics for Isaac/GPU state.

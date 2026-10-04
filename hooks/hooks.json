@@ -3,7 +3,7 @@
     "SessionStart": [
       {
         "type": "text",
-        "content": "## isaac-mcp\nYou are working in isaac-mcp (NVIDIA Isaac Sim/Lab via MCP, 15 tools).\nBefore starting work: call sim_status() for Isaac/GPU state; scenes in scenes/ (.depot/registry.json); jobs in jobs/{id}/ (state.json, control.json, stop.signal).\nDrive sims with load_scene/start_sim/get_state/apply_control/list_jobs; use natural_language_control for NL actuator commands.\nAt end of work: ruff check + pytest -q green, commit in <=5-file batches, never commit .env."
+        "content": "## isaac-mcp\nYou are working in isaac-mcp (NVIDIA Isaac Sim/Lab via MCP, 18 tools).\nBefore starting work: call sim_status() for Isaac/GPU state; scenes in scenes/ (.depot/registry.json); jobs in jobs/{id}/ (state.json, control.json, stop.signal).\nDrive sims with load_scene/start_sim/get_state/apply_control/list_jobs; use natural_language_control for NL actuator commands.\nAt end of work: ruff check + pytest -q green, commit in <=5-file batches, never commit .env."
       }
     ]
   }

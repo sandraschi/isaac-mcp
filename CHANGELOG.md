@@ -1,5 +1,21 @@
 # Changelog
 
+## [Unreleased] — 2026-10-04 (deferred pass)
+
+### Added
+- Dialogic returns ({success, message}) on all tools via _ok/_fail; isaac-mcp
+  logger + logger.exception on sampling fallbacks
+- @mcp.resource isaac://depot, @mcp.prompt sim_quickstart; Prefab cards
+  (show_sim_status_card/scenes/jobs, app=True, prefab-ui dep, live-probed)
+- BUG-038 lifespan wiring (live uvicorn + fastmcp.Client list_tools proof)
+- REST GET /api/fleet/apps; pages Inbox/Tools/Skills/Chat/Apps; Dashboard
+  onboarding cue; docs trio (CONFIGURATION/DEVELOPMENT/TROUBLESHOOTING) +
+  ONBOARDING.md; TOOLS.md synced to 18 tools
+- Zustand LLM store; provider cards (Ollama/LM Studio) + GPU opportunity banner
+- useZoom (Ctrl+scroll, Ctrl+0), Ctrl+K tools jump, backend-status listen+poll
+- Leporello lists, error/empty/loading states, testids, dark Help, font contrast
+- Skill channels (.opencode/.agents); single npm lockfile; coverage gate 47%
+
 ## [Unreleased] — 2026-10-04 (assfix)
 
 ### Added
