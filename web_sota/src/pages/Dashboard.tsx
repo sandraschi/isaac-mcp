@@ -200,6 +200,20 @@ export default function Dashboard() {
               No jobs yet. Start a simulation from the Simulations page.
             </div>
           )}
+          {jobs.length === 0 && status && !status.isaac_available && (
+            <div className="p-4 flex items-center justify-between text-sm">
+              <div>
+                <span className="font-medium">sample-room</span>
+                <span className="text-slate-300 ml-2">#mock0000</span>
+              </div>
+              <span
+                className="px-2 py-0.5 rounded text-sm font-medium bg-amber-900 text-amber-300"
+                data-testid="dashboard-mock-badge"
+              >
+                MOCK
+              </span>
+            </div>
+          )}
           {jobs.map((job) => (
             <div
               key={job.job_id}
