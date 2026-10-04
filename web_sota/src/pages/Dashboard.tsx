@@ -90,7 +90,7 @@ export default function Dashboard() {
   return (
     <div className="max-w-5xl">
       <h1 className="text-2xl font-bold mb-2">Dashboard</h1>
-      <p className="text-sm text-slate-400 mb-6" data-testid="dashboard-hero">
+      <p className="text-sm text-slate-300 mb-6" data-testid="dashboard-hero">
         isaac-mcp wraps NVIDIA Isaac Sim / Isaac Lab as MCP tools: load USD
         scenes on the Models page, start GPU-accelerated simulations below or
         from Simulations, then drive joints from the chat or the LLM page.
@@ -98,7 +98,7 @@ export default function Dashboard() {
         or pick a scene to load first.
       </p>
 
-      <div className="grid grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-4 gap-4 mb-8" data-testid="dashboard-kpis">
         {[
           {
             label: "Isaac Sim",
@@ -114,7 +114,7 @@ export default function Dashboard() {
             key={c.label}
             className="bg-slate-800 rounded-xl p-4 border border-slate-700"
           >
-            <div className="text-xs text-slate-400 uppercase tracking-wider">
+            <div className="text-sm text-slate-300 uppercase tracking-wider">
               {c.label}
             </div>
             <div className="text-2xl font-bold mt-1 text-cyan-300">
@@ -137,17 +137,17 @@ export default function Dashboard() {
               "Point isaac-mcp at Isaac Sim, then chat with your robot."}
           </p>
           {!status.isaac_available && (
-            <p className="text-sm text-slate-400 mb-2">
+            <p className="text-sm text-slate-300 mb-2">
               Isaac Sim not detected — set ISAAC_SIM_PATH (see .env.example).
             </p>
           )}
           {llmOk === false && (
-            <p className="text-sm text-slate-400 mb-2">
+            <p className="text-sm text-slate-300 mb-2">
               No local LLM reachable — start Ollama on :11434 for the AI tools.
             </p>
           )}
           {(onboarding?.next_steps || []).length > 0 && (
-            <ul className="list-disc ml-5 text-sm text-slate-400 mb-3">
+            <ul className="list-disc ml-5 text-sm text-slate-300 mb-3">
               {(onboarding?.next_steps || []).map((step) => (
                 <li key={step}>{step}</li>
               ))}
@@ -159,7 +159,10 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="bg-slate-800 rounded-xl p-5 border border-slate-700 mb-8">
+      <div
+        className="bg-slate-800 rounded-xl p-5 border border-slate-700 mb-8"
+        data-testid="dashboard-ai"
+      >
         <h2 className="text-lg font-semibold mb-3">Quick AI Workflow</h2>
         <div className="flex gap-3">
           <input
@@ -184,13 +187,16 @@ export default function Dashboard() {
         )}
       </div>
 
-      <div className="bg-slate-800 rounded-xl border border-slate-700">
+      <div
+        className="bg-slate-800 rounded-xl border border-slate-700"
+        data-testid="dashboard-jobs"
+      >
         <h2 className="text-lg font-semibold p-4 border-b border-slate-700">
           Active Jobs
         </h2>
         <div className="divide-y divide-slate-700">
           {jobs.length === 0 && (
-            <div className="p-4 text-sm text-slate-500">
+            <div className="p-4 text-sm text-slate-300">
               No jobs yet. Start a simulation from the Simulations page.
             </div>
           )}
@@ -201,13 +207,13 @@ export default function Dashboard() {
             >
               <div>
                 <span className="font-medium">{job.scene_name}</span>
-                <span className="text-slate-500 ml-2">#{job.job_id}</span>
+                <span className="text-slate-300 ml-2">#{job.job_id}</span>
               </div>
               <span
-                className={`px-2 py-0.5 rounded text-xs font-medium ${
+                className={`px-2 py-0.5 rounded text-sm font-medium ${
                   job.running
                     ? "bg-green-900 text-green-300"
-                    : "bg-slate-700 text-slate-400"
+                    : "bg-slate-700 text-slate-300"
                 }`}
               >
                 {job.running

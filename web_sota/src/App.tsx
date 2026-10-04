@@ -9,6 +9,7 @@ import {
 import FloatingChat from "./components/FloatingChat";
 import { useZoom } from "./hooks/useZoom";
 import { API_BASE } from "./lib/api";
+import Apps from "./pages/Apps";
 import Chat from "./pages/Chat";
 import Dashboard from "./pages/Dashboard";
 import Help from "./pages/Help";
@@ -29,6 +30,7 @@ const navItems = [
   { to: "/tools", label: "Tools", icon: "🛠️" },
   { to: "/skills", label: "Skills", icon: "📚" },
   { to: "/chat", label: "Chat", icon: "💬" },
+  { to: "/apps", label: "Apps", icon: "🗂️" },
   { to: "/logging", label: "Logging", icon: "📊" },
   { to: "/llm", label: "LLM", icon: "🤖" },
   { to: "/settings", label: "Settings", icon: "⚙️" },
@@ -173,6 +175,7 @@ function Shell() {
           <Route path="/tools" element={<Tools />} />
           <Route path="/skills" element={<Skills />} />
           <Route path="/chat" element={<Chat />} />
+          <Route path="/apps" element={<Apps />} />
           <Route path="/logging" element={<Logging />} />
           <Route path="/llm" element={<LLM />} />
           <Route path="/settings" element={<Settings />} />

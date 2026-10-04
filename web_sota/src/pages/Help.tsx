@@ -131,15 +131,16 @@ const TROUBLES = [
 export default function Help() {
   const [tab, setTab] = useState(0);
   return (
-    <div>
+    <div data-testid="help-page">
       <h1 className="text-2xl font-bold mb-6">Help</h1>
-      <div className="flex gap-2 mb-6 flex-wrap">
+      <div className="flex gap-2 mb-6 flex-wrap" data-testid="help-tabs">
         {TABS.map((t, i) => (
           <button
             type="button"
             key={t}
+            data-testid={`help-tab-${t}`}
             onClick={() => setTab(i)}
-            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${tab === i ? "bg-blue-600 text-white" : "border border-slate-300 text-slate-600 hover:bg-slate-100"}`}
+            className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${tab === i ? "bg-blue-600 text-white" : "border border-slate-600 text-slate-300 hover:bg-slate-800"}`}
           >
             {t}
           </button>
@@ -161,8 +162,8 @@ function Card({
   children: React.ReactNode;
 }) {
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-5 mb-4">
-      <h2 className="text-sm font-semibold text-slate-700 uppercase tracking-wider mb-4">
+    <div className="bg-slate-800 rounded-xl border border-slate-700 p-5 mb-4">
+      <h2 className="text-sm font-semibold text-slate-200 uppercase tracking-wider mb-4">
         {title}
       </h2>
       {children}
@@ -174,31 +175,31 @@ function Overview() {
   return (
     <div className="space-y-4">
       <Card title="What It Is">
-        <p className="text-sm text-slate-600 mb-2">
+        <p className="text-sm text-slate-300 mb-2">
           <strong>isaac-mcp</strong> wraps NVIDIA Isaac Sim / Isaac Lab as MCP
           tools. Start, control, and query Isaac Sim simulations from any MCP
           client.
         </p>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-300">
           <strong>Requires an NVIDIA GPU</strong> with at least 8 GB VRAM (RTX
           3060+) and driver 580.65.06+.
           <strong>Isaac Sim is a separate install</strong> — either via pip (
-          <code className="text-xs bg-slate-100 px-1 rounded">
+          <code className="text-xs bg-slate-900 px-1 rounded">
             isaacsim[all,extscache]==5.1.0
           </code>
           ) or a binary install (2023.1+). The server auto-detects the Python
           interpreter.
         </p>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-300">
           USD scenes only. Each simulation runs as an isolated subprocess with
           state sync via the fleet file-protocol (
-          <code className="text-xs bg-slate-100 px-1 rounded">state.json</code>{" "}
+          <code className="text-xs bg-slate-900 px-1 rounded">state.json</code>{" "}
           /{" "}
-          <code className="text-xs bg-slate-100 px-1 rounded">
+          <code className="text-xs bg-slate-900 px-1 rounded">
             control.json
           </code>{" "}
           /{" "}
-          <code className="text-xs bg-slate-100 px-1 rounded">stop.signal</code>
+          <code className="text-xs bg-slate-900 px-1 rounded">stop.signal</code>
           ).
         </p>
       </Card>
@@ -216,7 +217,7 @@ Isaac Sim runner (Python 3.11 + isaacsim)
     │  PhysX GPU physics + RTX rendering
     │  state sync via JSON over pipe`}
         </pre>
-        <p className="text-sm text-slate-600">
+        <p className="text-sm text-slate-300">
           <strong>Two Python envs:</strong> Server runs on Python 3.12
           (FastMCP). Sims launch under a dedicated Python 3.11 interpreter
           (Isaac Sim 5.x requirement).
@@ -226,21 +227,21 @@ Isaac Sim runner (Python 3.11 + isaacsim)
       <Card title="Ports">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-200 text-left text-slate-500">
+            <tr className="border-b border-slate-700 text-left text-slate-300">
               <th className="pb-2 pr-4 font-medium">Port</th>
               <th className="pb-2 font-medium">Service</th>
             </tr>
           </thead>
           <tbody>
-            <tr className="border-b border-slate-100">
+            <tr className="border-b border-slate-700">
               <td className="py-2 pr-4 text-xs font-mono">11049</td>
-              <td className="py-2 text-xs text-slate-600">
+              <td className="py-2 text-xs text-slate-300">
                 FastAPI backend + MCP HTTP
               </td>
             </tr>
             <tr>
               <td className="py-2 pr-4 text-xs font-mono">11048</td>
-              <td className="py-2 text-xs text-slate-600">
+              <td className="py-2 text-xs text-slate-300">
                 Vite React frontend (dev)
               </td>
             </tr>
@@ -280,18 +281,18 @@ function Tools() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-200 text-left text-slate-500">
+              <tr className="border-b border-slate-700 text-left text-slate-300">
                 <th className="pb-2 pr-4 font-medium">Tool</th>
                 <th className="pb-2 font-medium">Description</th>
               </tr>
             </thead>
             <tbody>
               {sim.map((t) => (
-                <tr key={t.name} className="border-b border-slate-100">
-                  <td className="py-2 pr-4 text-xs font-mono text-blue-700 whitespace-nowrap">
+                <tr key={t.name} className="border-b border-slate-700">
+                  <td className="py-2 pr-4 text-xs font-mono text-cyan-300 whitespace-nowrap">
                     {t.name}
                   </td>
-                  <td className="py-2 text-xs text-slate-600">{t.desc}</td>
+                  <td className="py-2 text-xs text-slate-300">{t.desc}</td>
                 </tr>
               ))}
             </tbody>
@@ -303,26 +304,26 @@ function Tools() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-200 text-left text-slate-500">
+              <tr className="border-b border-slate-700 text-left text-slate-300">
                 <th className="pb-2 pr-4 font-medium">Tool</th>
                 <th className="pb-2 font-medium">Description</th>
               </tr>
             </thead>
             <tbody>
               {ai.map((t) => (
-                <tr key={t.name} className="border-b border-slate-100">
-                  <td className="py-2 pr-4 text-xs font-mono text-blue-700 whitespace-nowrap">
+                <tr key={t.name} className="border-b border-slate-700">
+                  <td className="py-2 pr-4 text-xs font-mono text-cyan-300 whitespace-nowrap">
                     {t.name}
                   </td>
-                  <td className="py-2 text-xs text-slate-600">{t.desc}</td>
+                  <td className="py-2 text-xs text-slate-300">{t.desc}</td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p className="text-xs text-slate-500 mt-3">
+        <p className="text-xs text-slate-300 mt-3">
           Full reference:{" "}
-          <code className="text-xs bg-slate-100 px-1 rounded">
+          <code className="text-xs bg-slate-900 px-1 rounded">
             docs/TOOLS.md
           </code>{" "}
           in the repo.
@@ -336,7 +337,7 @@ function Setup() {
   return (
     <div className="space-y-4">
       <Card title="Prerequisites">
-        <ul className="list-disc list-inside text-sm text-slate-600 space-y-1">
+        <ul className="list-disc list-inside text-sm text-slate-300 space-y-1">
           <li>
             <strong>NVIDIA GPU</strong> — 8+ GB VRAM (RTX 3060+), driver
             580.65.06+
@@ -356,7 +357,7 @@ function Setup() {
           </li>
           <li>
             <strong>uv</strong> (recommended) —{" "}
-            <code className="text-xs bg-slate-100 px-1 rounded">
+            <code className="text-xs bg-slate-900 px-1 rounded">
               pip install uv
             </code>
           </li>
@@ -385,44 +386,44 @@ uv run python -m isaac_mcp`}
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-200 text-left text-slate-500">
+              <tr className="border-b border-slate-700 text-left text-slate-300">
                 <th className="pb-2 pr-4 font-medium">Variable</th>
                 <th className="pb-2 pr-4 font-medium">Default</th>
                 <th className="pb-2 font-medium">Description</th>
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b border-slate-100">
+              <tr className="border-b border-slate-700">
                 <td className="py-2 pr-4 text-xs font-mono">ISAAC_SIM_PATH</td>
-                <td className="py-2 pr-4 text-xs text-slate-500">
+                <td className="py-2 pr-4 text-xs text-slate-300">
                   C:/Program Files/NVIDIA/Isaac Sim
                 </td>
-                <td className="py-2 text-xs text-slate-600">
+                <td className="py-2 text-xs text-slate-300">
                   Path to binary Isaac Sim install
                 </td>
               </tr>
-              <tr className="border-b border-slate-100">
+              <tr className="border-b border-slate-700">
                 <td className="py-2 pr-4 text-xs font-mono">ISAAC_PYTHON</td>
-                <td className="py-2 pr-4 text-xs text-slate-500">
+                <td className="py-2 pr-4 text-xs text-slate-300">
                   auto-detect
                 </td>
-                <td className="py-2 text-xs text-slate-600">
+                <td className="py-2 text-xs text-slate-300">
                   Explicit Python interpreter for Isaac Sim
                 </td>
               </tr>
-              <tr className="border-b border-slate-100">
+              <tr className="border-b border-slate-700">
                 <td className="py-2 pr-4 text-xs font-mono">
                   ISAAC_MCP_SCENES_DIR
                 </td>
-                <td className="py-2 pr-4 text-xs text-slate-500">./scenes/</td>
-                <td className="py-2 text-xs text-slate-600">
+                <td className="py-2 pr-4 text-xs text-slate-300">./scenes/</td>
+                <td className="py-2 text-xs text-slate-300">
                   Custom scene depot directory
                 </td>
               </tr>
               <tr>
                 <td className="py-2 pr-4 text-xs font-mono">ISAAC_MCP_PORT</td>
-                <td className="py-2 pr-4 text-xs text-slate-500">11049</td>
-                <td className="py-2 text-xs text-slate-600">
+                <td className="py-2 pr-4 text-xs text-slate-300">11049</td>
+                <td className="py-2 text-xs text-slate-300">
                   MCP server HTTP port
                 </td>
               </tr>
@@ -449,7 +450,7 @@ function Troubleshooting() {
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-200 text-left text-slate-500">
+            <tr className="border-b border-slate-700 text-left text-slate-300">
               <th className="pb-2 pr-4 font-medium">Symptom</th>
               <th className="pb-2 pr-4 font-medium">Cause</th>
               <th className="pb-2 font-medium">Fix</th>
@@ -457,11 +458,11 @@ function Troubleshooting() {
           </thead>
           <tbody>
             {TROUBLES.map((t) => (
-              <tr key={t.symptom} className="border-b border-slate-100">
+              <tr key={t.symptom} className="border-b border-slate-700">
                 <td className="py-2 pr-4 text-xs text-red-700 font-medium align-top">
                   {t.symptom}
                 </td>
-                <td className="py-2 pr-4 text-xs text-slate-600 align-top">
+                <td className="py-2 pr-4 text-xs text-slate-300 align-top">
                   {t.cause}
                 </td>
                 <td className="py-2 text-xs text-slate-800 font-mono align-top whitespace-pre-wrap">
@@ -472,18 +473,18 @@ function Troubleshooting() {
           </tbody>
         </table>
       </div>
-      <div className="mt-4 p-3 bg-slate-50 rounded text-xs text-slate-600">
+      <div className="mt-4 p-3 bg-slate-900 rounded text-sm text-slate-300">
         <p className="mb-1">
           <strong>Log files:</strong> Per-job log in{" "}
-          <code className="text-xs bg-slate-100 px-1 rounded">
+          <code className="text-xs bg-slate-900 px-1 rounded">
             jobs/&lt;job_id&gt;/
           </code>
           , Isaac Sim stderr/subprocess output
         </p>
         <p className="mb-1">
           <strong>Reset:</strong> Delete{" "}
-          <code className="text-xs bg-slate-100 px-1 rounded">jobs/</code> and{" "}
-          <code className="text-xs bg-slate-100 px-1 rounded">
+          <code className="text-xs bg-slate-900 px-1 rounded">jobs/</code> and{" "}
+          <code className="text-xs bg-slate-900 px-1 rounded">
             scenes/.depot/registry.json
           </code>{" "}
           to clear all state

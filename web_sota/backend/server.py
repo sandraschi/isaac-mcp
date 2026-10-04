@@ -284,6 +284,50 @@ async def llm_onboarding():
     }
 
 
+@app.get("/api/fleet/apps")
+async def fleet_apps():
+    """Fleet app discovery: parse WEBAPP_PORTS.md registry, flag this service live."""
+    import re
+
+    apps: dict = {}
+    source = "local"
+    registry = REPO_ROOT.parent / "mcp-central-docs" / "operations" / "WEBAPP_PORTS.md"
+    if registry.is_file():
+        try:
+            for line in registry.read_text(encoding="utf-8").splitlines():
+                line = line.strip()
+                if not line.startswith("|"):
+                    continue
+                cells = [c.strip() for c in line.strip("|").split("|")]
+                if len(cells) < 3 or not re.fullmatch(r"\d+", cells[0]):
+                    continue
+                port, name, blurb = int(cells[0]), cells[1], cells[2]
+                if not name or name.startswith("-"):
+                    continue
+                entry = apps.setdefault(name, {"name": name, "ports": [], "blurb": blurb})
+                if port not in entry["ports"]:
+                    entry["ports"].append(port)
+            source = "WEBAPP_PORTS.md"
+        except OSError:
+            apps = {}
+    if not apps:
+        apps = {
+            "isaac-mcp": {"name": "isaac-mcp", "ports": [11048, 11049], "blurb": "this service"}
+        }
+    result = []
+    for name in sorted(apps):
+        entry = apps[name]
+        result.append(
+            {
+                "name": name,
+                "ports": sorted(entry["ports"]),
+                "blurb": entry["blurb"],
+                "live": name == "isaac-mcp",
+            }
+        )
+    return {"apps": result, "count": len(result), "source": source}
+
+
 @app.post("/api/llm/chat")
 async def llm_chat(body: dict):
     import httpx
