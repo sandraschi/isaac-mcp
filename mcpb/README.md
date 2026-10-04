@@ -31,7 +31,7 @@ install (`ISAAC_SIM_PATH`) is auto-detected as a fallback.
 
 ---
 
-## Tools (14 total)
+## Tools (18 total)
 
 | # | Tool | Description |
 |---|------|-------------|
@@ -49,6 +49,10 @@ install (`ISAAC_SIM_PATH`) is auto-detected as a fallback.
 | 12 | `analyze_sim_state` | 📊 NL analysis of robot posture/behaviour |
 | 13 | `analyze_sim_logs` | 🔍 NL diagnosis of sim errors |
 | 14 | `discover_model` | 🌐 AI-powered USD/URDF discovery from GitHub |
+| 15 | `isaac_shutdown` | Stop active sims and terminate the server (confirmed=true) |
+| 16 | `show_sim_status_card` | Prefab card: Isaac/GPU/depot status |
+| 17 | `show_scenes_card` | Prefab card: scene depot contents |
+| 18 | `show_jobs_card` | Prefab card: active + completed jobs |
 
 ---
 

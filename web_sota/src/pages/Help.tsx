@@ -73,6 +73,26 @@ const TOOLS = [
     desc: "AI-powered USD/URDF discovery from GitHub",
     group: "AI Workflow",
   },
+  {
+    name: "isaac_shutdown",
+    desc: "Stop active sims and terminate the server (confirmed=true)",
+    group: "Core Sim",
+  },
+  {
+    name: "show_sim_status_card",
+    desc: "Prefab card: Isaac/GPU/depot status",
+    group: "Prefab",
+  },
+  {
+    name: "show_scenes_card",
+    desc: "Prefab card: scene depot contents",
+    group: "Prefab",
+  },
+  {
+    name: "show_jobs_card",
+    desc: "Prefab card: active + completed jobs",
+    group: "Prefab",
+  },
 ];
 
 const TROUBLES = [
@@ -275,9 +295,10 @@ Isaac Sim runner (Python 3.11 + isaacsim)
 function Tools() {
   const sim = TOOLS.filter((t) => t.group === "Core Sim");
   const ai = TOOLS.filter((t) => t.group === "AI Workflow");
+  const prefab = TOOLS.filter((t) => t.group === "Prefab");
   return (
     <div className="space-y-4">
-      <Card title="Core Simulation Tools (9)">
+      <Card title="Core Simulation Tools (10)">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
@@ -328,6 +349,24 @@ function Tools() {
           </code>{" "}
           in the repo.
         </p>
+      </Card>
+
+      <Card title="Prefab Cards (3)">
+        <p className="text-sm text-slate-300 mb-3">
+          Rich in-chat cards for Prefab-capable MCP clients. Registered from{" "}
+          <code className="text-xs bg-slate-900 px-1 rounded">
+            src/isaac_mcp/prefab_cards.py
+          </code>
+          .
+        </p>
+        <div className="space-y-2">
+          {prefab.map((t) => (
+            <div key={t.name} className="text-sm">
+              <span className="font-mono text-cyan-300 text-xs">{t.name}</span>
+              <span className="text-slate-300 text-xs ml-2">{t.desc}</span>
+            </div>
+          ))}
+        </div>
       </Card>
     </div>
   );

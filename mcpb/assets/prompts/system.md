@@ -47,9 +47,9 @@ jobs/
     completed.txt     # Marker file for clean completion
 ```
 
-## Complete Tool Reference (14 tools)
+## Complete Tool Reference (18 tools)
 
-All tools return `{success: bool, ...}`. Always check success before proceeding.
+All tools return `{success: bool, message: str, ...}`. Always check success before proceeding.
 
 ### Simulation Tools
 
@@ -110,6 +110,19 @@ D**iagnose sim issues** from log output via LLM. Reads runner.log and error.txt.
 #### discover_model()
 
 S**earch GitHub for models** matching NL description. Downloads valid MJCF/USD/URDF files. **Input**: description (str). **Output**: {success, models_loaded: [{url, name}], urls_tried: [str]}.
+
+#### isaac_shutdown()
+
+S**top active sims, then terminate the server**. Refuses without confirmed=true. **Input**: confirmed (bool). **Output**: {success, stopped_jobs: [str], message}.
+
+### Prefab Cards (app=True)
+
+Rich in-chat cards for Prefab-capable clients: **show_sim_status_card()** (Isaac/GPU/depot status), **show_scenes_card()** (depot contents), **show_jobs_card()** (active + completed jobs).
+
+### Resource & Prompt
+
+- **isaac://depot** (resource): scene depot registry snapshot as JSON.
+- **sim_quickstart(goal)** (prompt): load, start, control, stop starter text.
 
 ## Error Handling Strategy
 
