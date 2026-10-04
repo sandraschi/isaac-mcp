@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { API_BASE } from "../lib/api";
+import { useLlmStore } from "../store/llm";
 
 interface Message {
   id: number;
@@ -33,12 +34,9 @@ export default function FloatingChat() {
   const [chat, setChat] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [provider] = useState(
-    () => localStorage.getItem("llm_provider") || "ollama",
-  );
-  const [model, setModel] = useState(
-    () => localStorage.getItem("llm_model") || "",
-  );
+  const provider = useLlmStore((s) => s.provider);
+  const model = useLlmStore((s) => s.model);
+  const setStoreModel = useLlmStore((s) => s.setModel);
   const [modelList, setModelList] = useState<string[]>([]);
   const [skillName, setSkillName] = useState("");
   const [personality, setPersonality] = useState(
@@ -79,12 +77,11 @@ export default function FloatingChat() {
         }
         setModelList(list);
         if (!model && list.length > 0) {
-          setModel(list[0]);
-          localStorage.setItem("llm_model", list[0]);
+          setStoreModel(list[0]);
         }
       })
       .catch(() => {});
-  }, [model]);
+  }, [model, setStoreModel]);
 
   useEffect(() => {
     if (open) bottomRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -196,8 +193,7 @@ export default function FloatingChat() {
                   className="bg-slate-800 border border-slate-600 rounded text-xs px-2 py-1 text-slate-300 max-w-[140px]"
                   value={model}
                   onChange={(e) => {
-                    setModel(e.target.value);
-                    localStorage.setItem("llm_model", e.target.value);
+                    setStoreModel(e.target.value);
                   }}
                 >
                   {modelList.map((m) => (

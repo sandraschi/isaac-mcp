@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { API_BASE } from "../lib/api";
+import { useLlmStore } from "../store/llm";
 
 interface Message {
   id: number;
@@ -48,12 +49,8 @@ export default function Chat() {
   const [loading, setLoading] = useState(false);
   const [skills, setSkills] = useState<string[]>([]);
   const [providers, setProviders] = useState<Record<string, LlmModel[]>>({});
-  const [provider, setProvider] = useState(
-    () => localStorage.getItem("llm_provider") || "ollama",
-  );
-  const [model, setModel] = useState(
-    () => localStorage.getItem("llm_model") || "llama3.2:3b",
-  );
+  const provider = useLlmStore((s) => s.provider);
+  const model = useLlmStore((s) => s.model);
   const [personality, setPersonality] = useState(
     () => localStorage.getItem("chat_personality") || "helpful",
   );
