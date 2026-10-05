@@ -52,3 +52,19 @@ class TestLLM:
         assert resp.status_code == 200
         data = resp.json()
         assert "ollama" in data
+
+
+class TestChatAgent:
+    def test_agent_requires_prompt(self):
+        resp = client.post("/api/chat/agent", json={})
+        assert resp.json()["success"] is False
+
+    def test_agent_llm_unavailable(self, monkeypatch):
+        import httpx
+
+        def _refuse(*args, **kwargs):
+            raise httpx.ConnectError("test hermetic: no llm available")
+
+        monkeypatch.setattr(httpx, "post", _refuse)
+        resp = client.post("/api/chat/agent", json={"prompt": "check status"})
+        assert resp.json()["success"] is False

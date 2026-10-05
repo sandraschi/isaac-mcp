@@ -153,8 +153,8 @@ async def shutdown():
 async def diagnostics():
     """CUA-NSIS smoke surface: tool list, system info, errors."""
     try:
-        tools = await mcp_mod.mcp.get_tools()
-        names = sorted(tools.keys())
+        tools = await mcp_mod.mcp.list_tools()
+        names = sorted(t.name for t in tools)
     except Exception:
         names = [
             "sim_status",
@@ -230,7 +230,7 @@ async def llm_discover():
 
 @app.get("/api/llm/providers")
 async def llm_providers():
-    """Legacy shape (Settings/LLM/FloatingChat depend on it): {"ollama": [{name}]}."""
+    """Legacy shape (Settings/Chat depend on it): {"ollama": [{name}]}."""
     import httpx
 
     try:
@@ -326,6 +326,119 @@ async def fleet_apps():
             }
         )
     return {"apps": result, "count": len(result), "source": source}
+
+
+_AGENT_TOOLS = (
+    "sim_status",
+    "load_scene",
+    "spawn_model",
+    "start_sim",
+    "stop_sim",
+    "get_state",
+    "apply_control",
+    "list_scenes",
+    "list_jobs",
+)
+
+
+@app.post("/api/chat/agent")
+async def chat_agent(body: dict):
+    """Agentic chat: Ollama tool-loop over the safe sim tools (max 5 steps).
+
+    Destructive (isaac_shutdown) and LLM-wrapper tools are excluded on purpose:
+    the agent acts with sim tools only, everything else stays a human decision.
+    """
+    import inspect
+    import json
+
+    import httpx
+
+    prompt = (body.get("prompt") or "").strip()
+    if not prompt:
+        return {"success": False, "message": "prompt is required."}
+    model = body.get("model") or "llama3.2:3b"
+    system = body.get("system") or (
+        "You control NVIDIA Isaac Sim through tools. Prefer calling a tool "
+        "over describing what you would do."
+    )
+
+    import isaac_mcp.server as sim_mod
+
+    try:
+        listed = await mcp_mod.mcp.list_tools()
+        all_tools = {t.name: t for t in listed}
+    except Exception:
+        return {"success": False, "message": "Tool registry unavailable."}
+    specs = []
+    fns = {}
+    for name in _AGENT_TOOLS:
+        tool = all_tools.get(name)
+        fn = getattr(sim_mod, name, None)
+        if tool is None or fn is None:
+            continue
+        fns[name] = fn
+        params = getattr(tool, "parameters", None) or {"type": "object", "properties": {}}
+        specs.append(
+            {
+                "type": "function",
+                "function": {
+                    "name": name,
+                    "description": (getattr(tool, "description", "") or "")[:500],
+                    "parameters": params,
+                },
+            }
+        )
+    if not specs:
+        return {"success": False, "message": "No agent tools available."}
+
+    messages = [
+        {"role": "system", "content": system},
+        {"role": "user", "content": prompt},
+    ]
+    steps: list = []
+    try:
+        for _ in range(5):
+            r = httpx.post(
+                "http://127.0.0.1:11434/api/chat",
+                json={"model": model, "messages": messages, "tools": specs, "stream": False},
+                timeout=120,
+            )
+            msg = r.json().get("message", {})
+            calls = msg.get("tool_calls") or []
+            if msg.get("content"):
+                messages.append({"role": "assistant", "content": msg["content"]})
+            if not calls:
+                return {
+                    "success": True,
+                    "message": "Agent run finished.",
+                    "response": msg.get("content") or "Done.",
+                    "steps": steps,
+                }
+            for call in calls:
+                fn_spec = call.get("function", {})
+                name = fn_spec.get("name", "")
+                args = fn_spec.get("arguments", {}) or {}
+                fn = fns.get(name)
+                if fn is None:
+                    output = {"success": False, "error": f"Unknown tool {name!r}."}
+                else:
+                    try:
+                        res = fn(**args)
+                        output = await res if inspect.isawaitable(res) else res
+                    except TypeError as exc:
+                        output = {"success": False, "error": f"Bad arguments for {name}: {exc}"}
+                    except Exception as exc:
+                        output = {"success": False, "error": str(exc)}
+                steps.append({"tool": name, "arguments": args, "output": output})
+                messages.append({"role": "tool", "content": json.dumps(output, default=str)[:4000]})
+        return {
+            "success": True,
+            "message": "Agent run hit the step limit.",
+            "response": "I ran out of steps — see the trace.",
+            "steps": steps,
+        }
+    except Exception:
+        return {"success": False, "message": "LLM unavailable for agent run."}
 
 
 @app.post("/api/llm/chat")
