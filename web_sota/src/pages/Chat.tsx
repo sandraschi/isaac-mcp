@@ -57,6 +57,10 @@ export default function Chat() {
   const [customPrompt, setCustomPrompt] = useState(
     () => localStorage.getItem("chat_custom_prompt") || "",
   );
+  const [mode, setMode] = useState<"ask" | "act">("ask");
+  const [trace, setTrace] = useState<
+    { seq: number; tool: string; arguments: unknown; output: unknown }[]
+  >([]);
   const idRef = useRef(0);
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -108,16 +112,35 @@ export default function Chat() {
     try {
       const sp = PERSONALITIES.find((p) => p.id === personality);
       const base = personality === "custom" ? customPrompt : sp?.prompt || "";
+      const skillLine =
+        skills.length > 0 ? `\nAvailable skills: ${skills.join(", ")}.` : "";
       const system =
-        skills.length > 0
-          ? `${base}\nAvailable skills: ${skills.join(", ")}.`
-          : base;
-      const r = await fetch(`${API_BASE}/api/llm/chat`, {
+        mode === "act"
+          ? `${base}${skillLine}\nYou have Isaac Sim tools. Prefer calling them over describing what you would do.`
+          : `${base}${skillLine}`;
+      const endpoint =
+        mode === "act"
+          ? `${API_BASE}/api/chat/agent`
+          : `${API_BASE}/api/llm/chat`;
+      const r = await fetch(endpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ provider, model, prompt: text, system }),
       });
       const data = await r.json();
+      if (mode === "act" && Array.isArray(data.steps)) {
+        setTrace(
+          data.steps.map(
+            (
+              s: { tool: string; arguments: unknown; output: unknown },
+              idx: number,
+            ) => ({
+              ...s,
+              seq: idx,
+            }),
+          ),
+        );
+      }
       setChat((prev) => [
         ...prev,
         {
@@ -159,6 +182,7 @@ export default function Chat() {
 
   const handleClear = () => {
     setChat([]);
+    setTrace([]);
     localStorage.removeItem("isaac_chat");
   };
 
@@ -212,6 +236,27 @@ export default function Chat() {
             className={`w-2 h-2 rounded-full ${reachable ? "bg-green-500" : "bg-red-500"}`}
           />
           {reachable ? `${provider} / ${model}` : "no LLM detected"}
+        </span>
+        <span
+          className="flex rounded-lg border border-slate-600 overflow-hidden"
+          data-testid="chat-mode"
+        >
+          {(["ask", "act"] as const).map((m) => (
+            <button
+              key={m}
+              type="button"
+              onClick={() => setMode(m)}
+              className={`text-xs px-3 py-2 ${mode === m ? "bg-cyan-800 text-cyan-100" : "text-slate-400 hover:bg-slate-700"}`}
+              data-testid={`chat-mode-${m}`}
+              title={
+                m === "act"
+                  ? "Agent mode: the chat can call sim tools"
+                  : "Ask mode: direct answers"
+              }
+            >
+              {m === "act" ? "Act" : "Ask"}
+            </button>
+          ))}
         </span>
         <span className="flex gap-2 ml-auto">
           <button
@@ -286,6 +331,32 @@ export default function Chat() {
             </div>
           </div>
         ))}
+        {mode === "act" && trace.length > 0 && (
+          <div
+            className="bg-slate-900 rounded-xl border border-slate-700 p-4 mb-4"
+            data-testid="chat-trace"
+          >
+            <p className="text-sm font-medium text-slate-300 mb-2">
+              Tool calls ({trace.length})
+            </p>
+            <div className="space-y-2">
+              {trace.map((step) => (
+                <div key={step.seq} className="text-sm">
+                  <span className="font-mono text-cyan-300 text-xs">
+                    {step.tool}
+                  </span>
+                  <pre className="text-xs text-slate-300 bg-slate-800 rounded p-2 mt-1 overflow-auto max-h-32">
+                    {JSON.stringify(
+                      { arguments: step.arguments, output: step.output },
+                      null,
+                      2,
+                    )}
+                  </pre>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {loading && (
           <div className="text-slate-500 text-xs animate-pulse">
             Thinking...

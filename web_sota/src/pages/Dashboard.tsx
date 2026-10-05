@@ -93,9 +93,9 @@ export default function Dashboard() {
       <p className="text-sm text-slate-300 mb-6" data-testid="dashboard-hero">
         isaac-mcp wraps NVIDIA Isaac Sim / Isaac Lab as MCP tools: load USD
         scenes on the Models page, start GPU-accelerated simulations below or
-        from Simulations, then drive joints from the chat or the LLM page.
-        Backend status and job counts refresh live; start with Quick AI Workflow
-        or pick a scene to load first.
+        from Simulations, then drive joints from the Chat page (Ask for answers,
+        Act to run tools). Backend status and job counts refresh live; start
+        with Quick AI Workflow or pick a scene to load first.
       </p>
 
       <div className="grid grid-cols-4 gap-4 mb-8" data-testid="dashboard-kpis">

@@ -268,7 +268,7 @@ export default function Settings() {
         </div>
 
         <div className="text-sm text-slate-300">
-          The LLM page uses these settings. Changes are saved to localStorage
+          The Chat page uses these settings. Changes are saved to localStorage
           and persist across sessions.
         </div>
       </div>

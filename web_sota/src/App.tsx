@@ -6,15 +6,12 @@ import {
   Routes,
   useNavigate,
 } from "react-router-dom";
-import FloatingChat from "./components/FloatingChat";
 import { useZoom } from "./hooks/useZoom";
 import { API_BASE } from "./lib/api";
-import Apps from "./pages/Apps";
 import Chat from "./pages/Chat";
 import Dashboard from "./pages/Dashboard";
 import Help from "./pages/Help";
 import Inbox from "./pages/Inbox";
-import LLM from "./pages/LLM";
 import Logging from "./pages/Logging";
 import Models from "./pages/Models";
 import Settings from "./pages/Settings";
@@ -34,7 +31,6 @@ const navItems = [
   { to: "/chat", label: "Chat", icon: "💬" },
   { to: "/apps", label: "Apps", icon: "🗂️" },
   { to: "/logging", label: "Logging", icon: "📊" },
-  { to: "/llm", label: "LLM", icon: "🤖" },
   { to: "/settings", label: "Settings", icon: "⚙️" },
   { to: "/help", label: "Help", icon: "❓" },
 ];
@@ -180,12 +176,10 @@ function Shell() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/apps" element={<Apps />} />
           <Route path="/logging" element={<Logging />} />
-          <Route path="/llm" element={<LLM />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />
         </Routes>
       </main>
-      <FloatingChat />
     </div>
   );
 }
