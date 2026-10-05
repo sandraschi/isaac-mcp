@@ -23,7 +23,7 @@ General-purpose NVIDIA Isaac Sim/Lab simulation via MCP. Start, control, and que
 | Natural language control | P1 | NL → actuator values |
 | Conversational analysis | P1 | LLM reads state + logs, diagnoses issues |
 | Smart model discovery | P2 | LLM generates USD/URDF URLs from GitHub |
-| Web dashboard | P2 | React + Vite at 11048 (12 pages: Dashboard, Simulations, Models, Inbox, Tools, Skills, Chat, Apps, Logging, LLM, Settings, Help) |
+| Web dashboard | P2 | React + Vite at 11048 (11 pages: Dashboard, Setup, Simulations, Models, Inbox, Tools, Skills, Chat, Apps, Logging, Settings, Help; single tool-using Chat with Ask/Act modes) |
 | Prefab cards | P2 | app=True in-chat cards (status, scenes, jobs) |
 | Onboarding | P1 | docs/ONBOARDING.md + under-hero cue + MOCK-until-onboarded |
 | CI | P1 | ruff lint + pytest on push/PR |

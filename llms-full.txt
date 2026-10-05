@@ -48,7 +48,7 @@ ISAAC_MCP_HOST/ISAAC_MCP_PORT (default 127.0.0.1:11049).
 - src/isaac_mcp/server.py — 18 MCP tools (+ prefab_cards.py); _sim_runner.py — Isaac subprocess
   (file protocol: metadata.json, state.json, control.json, stop.signal,
   completed.txt, error.txt, runner.log)
-- web_sota/backend/server.py — FastAPI; web_sota/src/ — 12 React pages
+- web_sota/backend/server.py — FastAPI; web_sota/src/ — 11 React pages (single Chat: Ask answers, Act runs sim tools via /api/chat/agent)
 - native/ — Tauri shell (backend 11049); scenes/, jobs/ — runtime data
 - Skills: skills/isaac/SKILL.md (served via GET /api/skills)
 

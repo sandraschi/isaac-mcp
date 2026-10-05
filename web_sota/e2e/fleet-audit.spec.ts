@@ -49,11 +49,11 @@ test.describe('Fleet Audit — isaac-mcp', () => {
         expect(count).toBeGreaterThanOrEqual(2);
     });
 
-    test('LLM page renders', async ({ page }) => {
-        await page.goto(FE + '/llm', { timeout: 15000 });
+    test('Chat page renders', async ({ page }) => {
+        await page.goto(FE + '/chat', { timeout: 15000 });
         await page.waitForTimeout(2000);
-        await expect(page.locator('h1')).toContainText('LLM');
-        const textarea = page.locator('textarea');
-        await expect(textarea).toBeAttached();
+        await expect(page.locator('h1')).toContainText('Chat');
+        const input = page.locator('[data-testid="chat-input"]');
+        await expect(input).toBeAttached();
     });
 });
