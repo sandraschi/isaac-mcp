@@ -1,3 +1,4 @@
+import asyncio
 import json
 import logging
 import os
@@ -696,7 +697,8 @@ After completion, summarize what happened and any observations."""
     except Exception as e:
         logger.exception("ctx.sample failed; falling back to Ollama")
         try:
-            resp = httpx.post(
+            resp = await asyncio.to_thread(
+                httpx.post,
                 "http://127.0.0.1:11434/api/generate",
                 json={"model": "llama3.2:3b", "prompt": prompt, "stream": False},
                 timeout=120,
@@ -763,7 +765,8 @@ Example: {{"shoulder_joint": 0.5, "elbow_joint": -0.3}}"""
     except Exception:
         logger.exception("ctx.sample unavailable; falling back to Ollama")
         try:
-            resp = httpx.post(
+            resp = await asyncio.to_thread(
+                httpx.post,
                 "http://127.0.0.1:11434/api/generate",
                 json={"model": "llama3.2:3b", "prompt": nl_prompt, "stream": False},
                 timeout=30,
@@ -846,7 +849,8 @@ Describe in plain English:
     except Exception:
         logger.exception("ctx.sample unavailable; falling back to Ollama")
         try:
-            resp = httpx.post(
+            resp = await asyncio.to_thread(
+                httpx.post,
                 "http://127.0.0.1:11434/api/generate",
                 json={"model": "llama3.2:3b", "prompt": analyze_prompt, "stream": False},
                 timeout=30,
@@ -933,7 +937,8 @@ Provide:
     except Exception:
         logger.exception("ctx.sample unavailable; falling back to Ollama")
         try:
-            resp = httpx.post(
+            resp = await asyncio.to_thread(
+                httpx.post,
                 "http://127.0.0.1:11434/api/generate",
                 json={"model": "llama3.2:3b", "prompt": log_prompt, "stream": False},
                 timeout=30,
@@ -983,7 +988,8 @@ Example: ["https://raw.githubusercontent.com/NVIDIA-Omniverse/IsaacSim-omni.isaa
     except Exception:
         logger.exception("ctx.sample unavailable; falling back to Ollama")
         try:
-            resp = httpx.post(
+            resp = await asyncio.to_thread(
+                httpx.post,
                 "http://127.0.0.1:11434/api/generate",
                 json={"model": "llama3.2:3b", "prompt": prompt, "stream": False},
                 timeout=30,
@@ -999,7 +1005,7 @@ Example: ["https://raw.githubusercontent.com/NVIDIA-Omniverse/IsaacSim-omni.isaa
     loaded = []
     for url in urls[:4]:
         try:
-            resp = httpx.get(url, follow_redirects=True, timeout=30)
+            resp = await asyncio.to_thread(httpx.get, url, follow_redirects=True, timeout=30)
             if resp.status_code == 200:
                 name = Path(url).stem
                 ext = Path(url).suffix.lower() or ".usd"

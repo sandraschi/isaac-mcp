@@ -1,5 +1,6 @@
 """FastAPI backend for the isaac-mcp web dashboard."""
 
+import asyncio
 import sys
 from contextlib import asynccontextmanager
 from pathlib import Path
@@ -117,7 +118,7 @@ async def scenes_load(body: dict):
     name = body.get("name", "")
     if not uri or not name:
         return {"success": False, "error": "Both 'uri' and 'name' are required."}
-    return load_scene(uri=uri, name=name)
+    return await asyncio.to_thread(load_scene, uri=uri, name=name)
 
 
 @app.get("/api/simulations")
@@ -216,10 +217,10 @@ async def llm_discover():
         reachable, models = False, []
         try:
             if pid == "ollama":
-                r = httpx.get(f"{base}/api/tags", timeout=3)
+                r = await asyncio.to_thread(httpx.get, f"{base}/api/tags", timeout=3)
                 models = [m.get("name", "") for m in r.json().get("models", [])]
             else:
-                r = httpx.get(f"{base}/v1/models", timeout=3)
+                r = await asyncio.to_thread(httpx.get, f"{base}/v1/models", timeout=3)
                 models = [m.get("id", "") for m in r.json().get("data", [])]
             reachable = True
         except Exception:
@@ -234,7 +235,7 @@ async def llm_providers():
     import httpx
 
     try:
-        r = httpx.get("http://127.0.0.1:11434/api/tags", timeout=3)
+        r = await asyncio.to_thread(httpx.get, "http://127.0.0.1:11434/api/tags", timeout=3)
         return {"ollama": r.json().get("models", [{"name": "llama3.2:3b"}])}
     except Exception:
         return {"ollama": [{"name": "llama3.2:3b"}]}
@@ -247,7 +248,7 @@ async def llm_models(provider: str = "ollama"):
 
     if provider == "lm-studio":
         try:
-            r = httpx.get("http://127.0.0.1:1234/v1/models", timeout=3)
+            r = await asyncio.to_thread(httpx.get, "http://127.0.0.1:1234/v1/models", timeout=3)
             return {
                 "provider": provider,
                 "models": [m.get("id", "") for m in r.json().get("data", [])],
@@ -255,7 +256,7 @@ async def llm_models(provider: str = "ollama"):
         except Exception:
             return {"provider": provider, "models": []}
     try:
-        r = httpx.get("http://127.0.0.1:11434/api/tags", timeout=3)
+        r = await asyncio.to_thread(httpx.get, "http://127.0.0.1:11434/api/tags", timeout=3)
         return {
             "provider": provider,
             "models": [m.get("name", "") for m in r.json().get("models", [])],
@@ -398,7 +399,8 @@ async def chat_agent(body: dict):
     steps: list = []
     try:
         for _ in range(5):
-            r = httpx.post(
+            r = await asyncio.to_thread(
+                httpx.post,
                 "http://127.0.0.1:11434/api/chat",
                 json={"model": model, "messages": messages, "tools": specs, "stream": False},
                 timeout=120,
@@ -446,7 +448,8 @@ async def llm_chat(body: dict):
     import httpx
 
     try:
-        resp = httpx.post(
+        resp = await asyncio.to_thread(
+            httpx.post,
             "http://127.0.0.1:11434/api/generate",
             json={
                 "model": body.get("model", "llama3.2:3b"),
