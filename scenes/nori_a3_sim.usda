@@ -1,0 +1,1104 @@
+#usda 1.0
+(
+    defaultPrim = "World"
+    metersPerUnit = 1.0
+    upAxis = "Z"
+)
+
+def Xform "World"
+{
+    def PhysicsScene "PhysicsScene"
+    {
+        vector3f physics:gravityDirection = (0, 0, -1)
+        float physics:gravityMagnitude = 9.81
+    }
+
+    def DistantLight "Sun"
+    {
+        float inputs:intensity = 2000
+        float inputs:angle = 0.53
+    }
+
+    def Cube "GroundPlane"
+    {
+        double size = 10.0
+        double3 xformOp:scale = (2.0, 2.0, 0.05)
+        double3 xformOp:translate = (0, 0, -0.05)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+    }
+
+    def Xform "NoriA3" (
+        prepend apiSchemas = ["PhysicsArticulationRootAPI"]
+    )
+    {
+        def Xform "base_footprint" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "base_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 3.9000
+            point3f physics:centerOfMass = (-0.1333, 0.0000, 0.0296)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.3500, 0.2000, 0.0400)
+                double3 xformOp:translate = (-0.1333, 0.0000, 0.0296)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "left_wheel_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.4370
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+            def Cylinder "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0762
+                double height = 0.0254
+                uniform token axis = "Z"
+                double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
+                quatf xformOp:orient = (0.7071, 0.7071, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+        }
+
+        def Xform "right_wheel_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.4370
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+            def Cylinder "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0762
+                double height = 0.0254
+                uniform token axis = "Z"
+                double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
+                quatf xformOp:orient = (0.7071, 0.7071, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+        }
+
+        def Xform "caster_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "left_caster_wheel_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.2470
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+            def Sphere "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0254
+                double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+        }
+
+        def Xform "right_caster_wheel_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.2470
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+            def Sphere "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0254
+                double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+        }
+
+        def Xform "lift_bottom_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 3.4020
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0388, 0.0689, 0.5150)
+                double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "lift_top_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.8900
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0508, 0.0809, 0.5150)
+                double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "lift_middle_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 2.2680
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0448, 0.0749, 0.5150)
+                double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "left_shoulder_pitch_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.4000
+            point3f physics:centerOfMass = (0.0000, -0.0235, 0.0000)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0556, 0.0470, 0.0383)
+                double3 xformOp:translate = (0.0000, -0.0235, 0.0000)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "left_shoulder_roll_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.2520
+            point3f physics:centerOfMass = (0.0000, 0.0000, -0.0455)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0836, 0.0450, 0.1350)
+                double3 xformOp:translate = (0.0000, 0.0000, -0.0455)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "left_bicep_yaw_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.1750
+            point3f physics:centerOfMass = (0.0000, 0.0000, -0.0416)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0383, 0.0541, 0.0833)
+                double3 xformOp:translate = (0.0000, 0.0000, -0.0416)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "left_elbow_pitch_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.2540
+            point3f physics:centerOfMass = (0.0000, 0.0000, -0.0455)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0836, 0.0450, 0.1350)
+                double3 xformOp:translate = (0.0000, 0.0000, -0.0455)
+                quatf xformOp:orient = (0.7071, 0.0000, 0.0000, 0.7071)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "left_forearm_yaw_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.1480
+            point3f physics:centerOfMass = (0.0000, 0.0000, -0.0282)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0352, 0.0500, 0.0564)
+                double3 xformOp:translate = (0.0000, 0.0000, -0.0282)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "left_wrist_pitch_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.0900
+            point3f physics:centerOfMass = (0.0000, 0.0000, -0.0330)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0500, 0.0634, 0.0900)
+                double3 xformOp:translate = (0.0000, 0.0000, -0.0330)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "left_wrist_roll_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.1420
+            point3f physics:centerOfMass = (0.0000, 0.0000, -0.0189)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0553, 0.0634, 0.0618)
+                double3 xformOp:translate = (0.0000, 0.0000, -0.0189)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "left_gripper_tcp_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "left_gripper_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.0130
+            point3f physics:centerOfMass = (0.0000, -0.0230, -0.0350)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0340, 0.0580, 0.1040)
+                double3 xformOp:translate = (0.0000, -0.0230, -0.0350)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "left_gripper_camera_mount_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "left_gripper_idler_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.0130
+            point3f physics:centerOfMass = (0.0000, -0.0230, -0.0350)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0340, 0.0580, 0.1040)
+                double3 xformOp:translate = (0.0000, -0.0230, -0.0350)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "right_shoulder_pitch_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.4000
+            point3f physics:centerOfMass = (0.0000, 0.0235, 0.0000)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0556, 0.0470, 0.0383)
+                double3 xformOp:translate = (0.0000, 0.0235, 0.0000)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "right_shoulder_roll_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.2520
+            point3f physics:centerOfMass = (0.0000, 0.0000, -0.0455)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0836, 0.0450, 0.1350)
+                double3 xformOp:translate = (0.0000, 0.0000, -0.0455)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "right_bicep_yaw_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.1750
+            point3f physics:centerOfMass = (0.0000, 0.0000, -0.0416)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0383, 0.0541, 0.0833)
+                double3 xformOp:translate = (0.0000, 0.0000, -0.0416)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "right_elbow_pitch_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.2540
+            point3f physics:centerOfMass = (0.0000, 0.0000, -0.0455)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0836, 0.0450, 0.1350)
+                double3 xformOp:translate = (0.0000, 0.0000, -0.0455)
+                quatf xformOp:orient = (0.7071, 0.0000, 0.0000, 0.7071)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "right_forearm_yaw_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.1480
+            point3f physics:centerOfMass = (0.0000, 0.0000, -0.0282)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0352, 0.0500, 0.0564)
+                double3 xformOp:translate = (0.0000, 0.0000, -0.0282)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "right_wrist_pitch_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.0900
+            point3f physics:centerOfMass = (0.0000, 0.0000, -0.0330)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0500, 0.0634, 0.0900)
+                double3 xformOp:translate = (0.0000, 0.0000, -0.0330)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "right_wrist_roll_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.1420
+            point3f physics:centerOfMass = (0.0000, 0.0000, -0.0189)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0553, 0.0634, 0.0618)
+                double3 xformOp:translate = (0.0000, 0.0000, -0.0189)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "right_gripper_tcp_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "right_gripper_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.0130
+            point3f physics:centerOfMass = (0.0000, 0.0230, -0.0350)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0340, 0.0580, 0.1040)
+                double3 xformOp:translate = (0.0000, 0.0230, -0.0350)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "right_gripper_camera_mount_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "right_gripper_idler_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.0130
+            point3f physics:centerOfMass = (0.0000, 0.0230, -0.0350)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0340, 0.0580, 0.1040)
+                double3 xformOp:translate = (0.0000, 0.0230, -0.0350)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "left_wrist_camera_mount_frame" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "left_wrist_camera_optical_frame" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "right_wrist_camera_mount_frame" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "right_wrist_camera_optical_frame" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "front_camera_mount_frame" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "front_camera_optical_frame" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "overhead_camera_mount_frame" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "overhead_camera_optical_frame" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "lidar_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.1100
+            point3f physics:centerOfMass = (0.0000, 0.0000, -0.0093)
+            def Cylinder "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0278
+                double height = 0.0413
+                uniform token axis = "Z"
+                double3 xformOp:translate = (0.0000, 0.0000, -0.0093)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+        }
+
+        def Xform "lidar_scan_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.0000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "imu_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.0100
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+            def Cube "collision_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                double3 xformOp:scale = (0.0053, 0.0039, 0.0012)
+                double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+        }
+
+        def Xform "torso_shell_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 1.5000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "neck_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.2000
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def Xform "head_link" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            float physics:mass = 0.7200
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+        }
+
+        def PhysicsFixedJoint "base_footprint_joint"
+        {
+            rel physics:body0 = </World/NoriA3/base_footprint>
+            rel physics:body1 = </World/NoriA3/base_link>
+            point3f physics:localPos0 = (0.0000, 0.0000, 0.0762)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsRevoluteJoint "left_wheel_joint"
+        {
+            rel physics:body0 = </World/NoriA3/base_link>
+            rel physics:body1 = </World/NoriA3/left_wheel_link>
+            point3f physics:localPos0 = (0.0000, 0.1500, 0.0000)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Y"
+        }
+
+        def PhysicsRevoluteJoint "right_wheel_joint"
+        {
+            rel physics:body0 = </World/NoriA3/base_link>
+            rel physics:body1 = </World/NoriA3/right_wheel_link>
+            point3f physics:localPos0 = (0.0000, -0.1500, 0.0000)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Y"
+        }
+
+        def PhysicsFixedJoint "caster_joint"
+        {
+            rel physics:body0 = </World/NoriA3/base_link>
+            rel physics:body1 = </World/NoriA3/caster_link>
+            point3f physics:localPos0 = (-0.2733, 0.0000, -0.0508)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "left_caster_wheel_joint"
+        {
+            rel physics:body0 = </World/NoriA3/caster_link>
+            rel physics:body1 = </World/NoriA3/left_caster_wheel_link>
+            point3f physics:localPos0 = (0.0000, 0.0750, 0.0000)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "right_caster_wheel_joint"
+        {
+            rel physics:body0 = </World/NoriA3/caster_link>
+            rel physics:body1 = </World/NoriA3/right_caster_wheel_link>
+            point3f physics:localPos0 = (0.0000, -0.0750, 0.0000)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "lift_bottom_joint"
+        {
+            rel physics:body0 = </World/NoriA3/base_link>
+            rel physics:body1 = </World/NoriA3/lift_bottom_link>
+            point3f physics:localPos0 = (-0.1135, 0.0000, 0.3527)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsPrismaticJoint "lift_extension_joint"
+        {
+            rel physics:body0 = </World/NoriA3/base_link>
+            rel physics:body1 = </World/NoriA3/lift_top_link>
+            point3f physics:localPos0 = (-0.1135, 0.0000, 0.3527)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Z"
+            float physics:lowerLimit = 0.0000
+            float physics:upperLimit = 0.7000
+        }
+
+        def PhysicsPrismaticJoint "lift_middle_joint"
+        {
+            rel physics:body0 = </World/NoriA3/base_link>
+            rel physics:body1 = </World/NoriA3/lift_middle_link>
+            point3f physics:localPos0 = (-0.1135, 0.0000, 0.3527)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Z"
+            float physics:lowerLimit = 0.0000
+            float physics:upperLimit = 0.3500
+        }
+
+        def PhysicsRevoluteJoint "left_shoulder_pitch_joint"
+        {
+            rel physics:body0 = </World/NoriA3/lift_top_link>
+            rel physics:body1 = </World/NoriA3/left_shoulder_pitch_link>
+            point3f physics:localPos0 = (-0.0000, 0.1250, 0.0870)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Y"
+            float physics:lowerLimit = -180.00
+            float physics:upperLimit = 180.00
+        }
+
+        def PhysicsRevoluteJoint "left_shoulder_roll_joint"
+        {
+            rel physics:body0 = </World/NoriA3/left_shoulder_pitch_link>
+            rel physics:body1 = </World/NoriA3/left_shoulder_roll_link>
+            point3f physics:localPos0 = (0.0000, -0.0567, 0.0000)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "X"
+            float physics:lowerLimit = -90.00
+            float physics:upperLimit = 90.00
+        }
+
+        def PhysicsRevoluteJoint "left_bicep_yaw_joint"
+        {
+            rel physics:body0 = </World/NoriA3/left_shoulder_roll_link>
+            rel physics:body1 = </World/NoriA3/left_bicep_yaw_link>
+            point3f physics:localPos0 = (0.0000, 0.0000, -0.1150)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Z"
+            float physics:lowerLimit = -180.00
+            float physics:upperLimit = 180.00
+        }
+
+        def PhysicsRevoluteJoint "left_elbow_pitch_joint"
+        {
+            rel physics:body0 = </World/NoriA3/left_bicep_yaw_link>
+            rel physics:body1 = </World/NoriA3/left_elbow_pitch_link>
+            point3f physics:localPos0 = (0.0000, 0.0000, -0.0674)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Y"
+            float physics:lowerLimit = -90.00
+            float physics:upperLimit = 90.00
+        }
+
+        def PhysicsRevoluteJoint "left_forearm_yaw_joint"
+        {
+            rel physics:body0 = </World/NoriA3/left_elbow_pitch_link>
+            rel physics:body1 = </World/NoriA3/left_forearm_yaw_link>
+            point3f physics:localPos0 = (0.0000, 0.0000, -0.1150)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Z"
+            float physics:lowerLimit = -180.00
+            float physics:upperLimit = 180.00
+        }
+
+        def PhysicsRevoluteJoint "left_wrist_pitch_joint"
+        {
+            rel physics:body0 = </World/NoriA3/left_forearm_yaw_link>
+            rel physics:body1 = </World/NoriA3/left_wrist_pitch_link>
+            point3f physics:localPos0 = (0.0000, 0.0000, -0.0462)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Y"
+            float physics:lowerLimit = -90.00
+            float physics:upperLimit = 90.00
+        }
+
+        def PhysicsRevoluteJoint "left_wrist_roll_joint"
+        {
+            rel physics:body0 = </World/NoriA3/left_wrist_pitch_link>
+            rel physics:body1 = </World/NoriA3/left_wrist_roll_link>
+            point3f physics:localPos0 = (0.0000, -0.0000, -0.0678)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "X"
+            float physics:lowerLimit = -90.00
+            float physics:upperLimit = 90.00
+        }
+
+        def PhysicsFixedJoint "left_gripper_tcp_joint"
+        {
+            rel physics:body0 = </World/NoriA3/left_wrist_roll_link>
+            rel physics:body1 = </World/NoriA3/left_gripper_tcp_link>
+            point3f physics:localPos0 = (0.0024, -0.0089, -0.1123)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsRevoluteJoint "left_gripper_joint"
+        {
+            rel physics:body0 = </World/NoriA3/left_wrist_roll_link>
+            rel physics:body1 = </World/NoriA3/left_gripper_link>
+            point3f physics:localPos0 = (0.0174, -0.0089, -0.0323)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Y"
+            float physics:lowerLimit = 0.00
+            float physics:upperLimit = 90.00
+        }
+
+        def PhysicsFixedJoint "left_gripper_camera_mount_joint"
+        {
+            rel physics:body0 = </World/NoriA3/left_wrist_roll_link>
+            rel physics:body1 = </World/NoriA3/left_gripper_camera_mount_link>
+            point3f physics:localPos0 = (0.0024, 0.0311, -0.0323)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsRevoluteJoint "left_gripper_idler_joint"
+        {
+            rel physics:body0 = </World/NoriA3/left_wrist_roll_link>
+            rel physics:body1 = </World/NoriA3/left_gripper_idler_link>
+            point3f physics:localPos0 = (-0.0126, -0.0089, -0.0323)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Y"
+            float physics:lowerLimit = -90.00
+            float physics:upperLimit = -0.00
+        }
+
+        def PhysicsRevoluteJoint "right_shoulder_pitch_joint"
+        {
+            rel physics:body0 = </World/NoriA3/lift_top_link>
+            rel physics:body1 = </World/NoriA3/right_shoulder_pitch_link>
+            point3f physics:localPos0 = (-0.0000, -0.1250, 0.0870)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Y"
+            float physics:lowerLimit = -180.00
+            float physics:upperLimit = 180.00
+        }
+
+        def PhysicsRevoluteJoint "right_shoulder_roll_joint"
+        {
+            rel physics:body0 = </World/NoriA3/right_shoulder_pitch_link>
+            rel physics:body1 = </World/NoriA3/right_shoulder_roll_link>
+            point3f physics:localPos0 = (0.0000, 0.0567, 0.0000)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "X"
+            float physics:lowerLimit = -90.00
+            float physics:upperLimit = 90.00
+        }
+
+        def PhysicsRevoluteJoint "right_bicep_yaw_joint"
+        {
+            rel physics:body0 = </World/NoriA3/right_shoulder_roll_link>
+            rel physics:body1 = </World/NoriA3/right_bicep_yaw_link>
+            point3f physics:localPos0 = (0.0000, 0.0000, -0.1150)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Z"
+            float physics:lowerLimit = -180.00
+            float physics:upperLimit = 180.00
+        }
+
+        def PhysicsRevoluteJoint "right_elbow_pitch_joint"
+        {
+            rel physics:body0 = </World/NoriA3/right_bicep_yaw_link>
+            rel physics:body1 = </World/NoriA3/right_elbow_pitch_link>
+            point3f physics:localPos0 = (0.0000, 0.0000, -0.0674)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Y"
+            float physics:lowerLimit = -90.00
+            float physics:upperLimit = 90.00
+        }
+
+        def PhysicsRevoluteJoint "right_forearm_yaw_joint"
+        {
+            rel physics:body0 = </World/NoriA3/right_elbow_pitch_link>
+            rel physics:body1 = </World/NoriA3/right_forearm_yaw_link>
+            point3f physics:localPos0 = (0.0000, 0.0000, -0.1150)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Z"
+            float physics:lowerLimit = -180.00
+            float physics:upperLimit = 180.00
+        }
+
+        def PhysicsRevoluteJoint "right_wrist_pitch_joint"
+        {
+            rel physics:body0 = </World/NoriA3/right_forearm_yaw_link>
+            rel physics:body1 = </World/NoriA3/right_wrist_pitch_link>
+            point3f physics:localPos0 = (0.0000, 0.0000, -0.0462)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Y"
+            float physics:lowerLimit = -90.00
+            float physics:upperLimit = 90.00
+        }
+
+        def PhysicsRevoluteJoint "right_wrist_roll_joint"
+        {
+            rel physics:body0 = </World/NoriA3/right_wrist_pitch_link>
+            rel physics:body1 = </World/NoriA3/right_wrist_roll_link>
+            point3f physics:localPos0 = (0.0000, 0.0000, -0.0678)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "X"
+            float physics:lowerLimit = -90.00
+            float physics:upperLimit = 90.00
+        }
+
+        def PhysicsFixedJoint "right_gripper_tcp_joint"
+        {
+            rel physics:body0 = </World/NoriA3/right_wrist_roll_link>
+            rel physics:body1 = </World/NoriA3/right_gripper_tcp_link>
+            point3f physics:localPos0 = (0.0024, 0.0089, -0.1123)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsRevoluteJoint "right_gripper_joint"
+        {
+            rel physics:body0 = </World/NoriA3/right_wrist_roll_link>
+            rel physics:body1 = </World/NoriA3/right_gripper_link>
+            point3f physics:localPos0 = (0.0174, 0.0089, -0.0323)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Y"
+            float physics:lowerLimit = 0.00
+            float physics:upperLimit = 90.00
+        }
+
+        def PhysicsFixedJoint "right_gripper_camera_mount_joint"
+        {
+            rel physics:body0 = </World/NoriA3/right_wrist_roll_link>
+            rel physics:body1 = </World/NoriA3/right_gripper_camera_mount_link>
+            point3f physics:localPos0 = (0.0034, -0.0311, -0.0323)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsRevoluteJoint "right_gripper_idler_joint"
+        {
+            rel physics:body0 = </World/NoriA3/right_wrist_roll_link>
+            rel physics:body1 = </World/NoriA3/right_gripper_idler_link>
+            point3f physics:localPos0 = (-0.0126, 0.0089, -0.0323)
+            point3f physics:localPos1 = (0, 0, 0)
+            uniform token physics:axis = "Y"
+            float physics:lowerLimit = -90.00
+            float physics:upperLimit = -0.00
+        }
+
+        def PhysicsFixedJoint "left_wrist_camera_mount_joint"
+        {
+            rel physics:body0 = </World/NoriA3/left_gripper_camera_mount_link>
+            rel physics:body1 = </World/NoriA3/left_wrist_camera_mount_frame>
+            point3f physics:localPos0 = (0.0000, -0.0534, -0.0254)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "left_wrist_camera_optical_joint"
+        {
+            rel physics:body0 = </World/NoriA3/left_wrist_camera_mount_frame>
+            rel physics:body1 = </World/NoriA3/left_wrist_camera_optical_frame>
+            point3f physics:localPos0 = (0.0000, 0.0000, 0.0000)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "right_wrist_camera_mount_joint"
+        {
+            rel physics:body0 = </World/NoriA3/right_gripper_camera_mount_link>
+            rel physics:body1 = </World/NoriA3/right_wrist_camera_mount_frame>
+            point3f physics:localPos0 = (0.0010, 0.0534, -0.0254)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "right_wrist_camera_optical_joint"
+        {
+            rel physics:body0 = </World/NoriA3/right_wrist_camera_mount_frame>
+            rel physics:body1 = </World/NoriA3/right_wrist_camera_optical_frame>
+            point3f physics:localPos0 = (0.0000, 0.0000, 0.0000)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "front_camera_mount_joint"
+        {
+            rel physics:body0 = </World/NoriA3/lift_top_link>
+            rel physics:body1 = </World/NoriA3/front_camera_mount_frame>
+            point3f physics:localPos0 = (0.0770, 0.0000, 0.0798)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "front_camera_optical_joint"
+        {
+            rel physics:body0 = </World/NoriA3/front_camera_mount_frame>
+            rel physics:body1 = </World/NoriA3/front_camera_optical_frame>
+            point3f physics:localPos0 = (0.0000, 0.0000, 0.0000)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "overhead_camera_mount_joint"
+        {
+            rel physics:body0 = </World/NoriA3/lift_top_link>
+            rel physics:body1 = </World/NoriA3/overhead_camera_mount_frame>
+            point3f physics:localPos0 = (0.0896, 0.0000, 0.3105)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "overhead_camera_optical_joint"
+        {
+            rel physics:body0 = </World/NoriA3/overhead_camera_mount_frame>
+            rel physics:body1 = </World/NoriA3/overhead_camera_optical_frame>
+            point3f physics:localPos0 = (0.0000, 0.0000, 0.0000)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "lidar_joint"
+        {
+            rel physics:body0 = </World/NoriA3/base_link>
+            rel physics:body1 = </World/NoriA3/lidar_link>
+            point3f physics:localPos0 = (0.0042, 0.0000, 0.1296)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "lidar_scan_joint"
+        {
+            rel physics:body0 = </World/NoriA3/lidar_link>
+            rel physics:body1 = </World/NoriA3/lidar_scan_link>
+            point3f physics:localPos0 = (0.0000, 0.0000, 0.0000)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "imu_joint"
+        {
+            rel physics:body0 = </World/NoriA3/base_link>
+            rel physics:body1 = </World/NoriA3/imu_link>
+            point3f physics:localPos0 = (0.0184, -0.0809, 0.0578)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "torso_shell_joint"
+        {
+            rel physics:body0 = </World/NoriA3/lift_top_link>
+            rel physics:body1 = </World/NoriA3/torso_shell_link>
+            point3f physics:localPos0 = (0.0000, 0.0000, 0.0370)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "neck_joint"
+        {
+            rel physics:body0 = </World/NoriA3/torso_shell_link>
+            rel physics:body1 = </World/NoriA3/neck_link>
+            point3f physics:localPos0 = (0.0000, 0.0000, 0.0900)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "head_joint"
+        {
+            rel physics:body0 = </World/NoriA3/neck_link>
+            rel physics:body1 = </World/NoriA3/head_link>
+            point3f physics:localPos0 = (0.0000, 0.0000, 0.0985)
+            point3f physics:localPos1 = (0, 0, 0)
+        }
+
+    }
+}
