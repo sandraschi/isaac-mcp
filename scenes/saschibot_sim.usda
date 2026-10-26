@@ -15,15 +15,18 @@ def Xform "World"
 
     def DistantLight "Sun"
     {
-        float inputs:intensity = 2000
+        float inputs:intensity = 450
         float inputs:angle = 0.53
     }
 
-    def Cube "GroundPlane"
+    def Cube "GroundPlane" (
+        prepend apiSchemas = ["PhysicsCollisionAPI"]
+    )
     {
-        double size = 10.0
-        double3 xformOp:scale = (2.0, 2.0, 0.05)
-        double3 xformOp:translate = (0, 0, -0.05)
+        double size = 1.0
+        color3f[] primvars:displayColor = [(0.10, 0.12, 0.16)]
+        double3 xformOp:scale = (6.0, 6.0, 0.02)
+        double3 xformOp:translate = (0, 0, -0.01)
         uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
     }
 
@@ -35,17 +38,148 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
-            float physics:mass = 12.0000
+            double3 xformOp:translate = (0.00000, 0.00000, 0.00000)
+            quatf xformOp:orient = (1.00000, 0.00000, 0.00000, 0.00000)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            float physics:mass = 24.0000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
-                double3 xformOp:scale = (0.4500, 0.4500, 0.1200)
-                double3 xformOp:translate = (0.0000, 0.0000, 0.1600)
+                color3f[] primvars:displayColor = [(0.180, 0.200, 0.240)]
+                double3 xformOp:scale = (0.6800, 0.5400, 0.1000)
+                double3 xformOp:translate = (0.0500, 0.0000, 0.1050)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
                 uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+            def Cube "geom_1" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
+                double3 xformOp:scale = (0.6500, 0.5200, 0.0320)
+                double3 xformOp:translate = (0.0500, 0.0000, 0.1710)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+            def Cube "geom_2" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:scale = (0.2600, 0.6100, 0.0280)
+                double3 xformOp:translate = (0.0500, 0.0000, 0.1610)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+            def Cube "geom_3" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:scale = (0.2800, 0.2800, 0.0400)
+                double3 xformOp:translate = (0.0000, 0.0000, 0.1910)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+            def Cube "geom_4" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:scale = (0.0240, 0.4800, 0.0340)
+                double3 xformOp:translate = (0.4000, 0.0000, 0.0950)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+            def Cube "geom_5" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:scale = (0.0240, 0.4800, 0.0340)
+                double3 xformOp:translate = (-0.3000, 0.0000, 0.0950)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+            def Cylinder "geom_6" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0460
+                double height = 0.0180
+                uniform token axis = "Z"
+                color3f[] primvars:displayColor = [(0.180, 0.200, 0.240)]
+                double3 xformOp:translate = (0.3150, 0.0000, 0.1950)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+            def Cylinder "geom_7" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0380
+                double height = 0.0480
+                uniform token axis = "Z"
+                color3f[] primvars:displayColor = [(0.060, 0.720, 0.960)]
+                double3 xformOp:translate = (0.3150, 0.0000, 0.2170)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+            def Cylinder "geom_8" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0300
+                double height = 0.0500
+                uniform token axis = "Z"
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:translate = (0.3450, 0.2350, 0.0640)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+            def Cylinder "geom_9" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0300
+                double height = 0.0500
+                uniform token axis = "Z"
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:translate = (0.3450, -0.2350, 0.0640)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+            def Cylinder "geom_10" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0300
+                double height = 0.0500
+                uniform token axis = "Z"
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:translate = (-0.2450, 0.2350, 0.0640)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+            def Cylinder "geom_11" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0300
+                double height = 0.0500
+                uniform token axis = "Z"
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:translate = (-0.2450, -0.2350, 0.0640)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             }
         }
 
@@ -53,17 +187,33 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
-            float physics:mass = 0.8000
+            double3 xformOp:translate = (0.05000, 0.29800, 0.10000)
+            quatf xformOp:orient = (1.00000, 0.00000, 0.00000, 0.00000)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            float physics:mass = 1.4000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cylinder "collision_0" (
+            def Cylinder "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
-                double radius = 0.0750
-                double height = 0.0500
+                double radius = 0.1000
+                double height = 0.0550
                 uniform token axis = "Z"
+                color3f[] primvars:displayColor = [(0.090, 0.090, 0.110)]
                 double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
-                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                quatf xformOp:orient = (0.7071, 0.7071, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+            def Cylinder "geom_1" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0580
+                double height = 0.0610
+                uniform token axis = "Z"
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
+                quatf xformOp:orient = (0.7071, 0.7071, 0.0000, 0.0000)
                 uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             }
         }
@@ -72,17 +222,33 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
-            float physics:mass = 0.8000
+            double3 xformOp:translate = (0.05000, -0.29800, 0.10000)
+            quatf xformOp:orient = (1.00000, 0.00000, 0.00000, 0.00000)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            float physics:mass = 1.4000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cylinder "collision_0" (
+            def Cylinder "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
-                double radius = 0.0750
-                double height = 0.0500
+                double radius = 0.1000
+                double height = 0.0550
                 uniform token axis = "Z"
+                color3f[] primvars:displayColor = [(0.090, 0.090, 0.110)]
                 double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
-                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                quatf xformOp:orient = (0.7071, 0.7071, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            }
+            def Cylinder "geom_1" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0580
+                double height = 0.0610
+                uniform token axis = "Z"
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
+                quatf xformOp:orient = (0.7071, 0.7071, 0.0000, 0.0000)
                 uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             }
         }
@@ -91,13 +257,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
-            float physics:mass = 0.2000
+            double3 xformOp:translate = (0.34500, 0.23500, 0.04000)
+            quatf xformOp:orient = (1.00000, 0.00000, 0.00000, 0.00000)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            float physics:mass = 0.3500
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Sphere "collision_0" (
+            def Sphere "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
-                double radius = 0.0300
+                double radius = 0.0400
+                color3f[] primvars:displayColor = [(0.090, 0.090, 0.110)]
                 double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
                 uniform token[] xformOpOrder = ["xformOp:translate"]
             }
@@ -107,13 +277,57 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
-            float physics:mass = 0.2000
+            double3 xformOp:translate = (0.34500, -0.23500, 0.04000)
+            quatf xformOp:orient = (1.00000, 0.00000, 0.00000, 0.00000)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            float physics:mass = 0.3500
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Sphere "collision_0" (
+            def Sphere "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
-                double radius = 0.0300
+                double radius = 0.0400
+                color3f[] primvars:displayColor = [(0.090, 0.090, 0.110)]
+                double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+        }
+
+        def Xform "caster_2" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            double3 xformOp:translate = (-0.24500, 0.23500, 0.04000)
+            quatf xformOp:orient = (1.00000, 0.00000, 0.00000, 0.00000)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            float physics:mass = 0.3500
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+            def Sphere "geom_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0400
+                color3f[] primvars:displayColor = [(0.090, 0.090, 0.110)]
+                double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate"]
+            }
+        }
+
+        def Xform "caster_3" (
+            prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
+        )
+        {
+            double3 xformOp:translate = (-0.24500, -0.23500, 0.04000)
+            quatf xformOp:orient = (1.00000, 0.00000, 0.00000, 0.00000)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
+            float physics:mass = 0.3500
+            point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
+            def Sphere "geom_0" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double radius = 0.0400
+                color3f[] primvars:displayColor = [(0.090, 0.090, 0.110)]
                 double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
                 uniform token[] xformOpOrder = ["xformOp:translate"]
             }
@@ -123,15 +337,19 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.00000, 0.00000, 0.00000)
+            quatf xformOp:orient = (1.00000, 0.00000, 0.00000, 0.00000)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 3.0000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
-                double3 xformOp:scale = (0.1600, 0.1600, 0.3500)
-                double3 xformOp:translate = (0.0000, 0.0000, 0.3950)
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:scale = (0.1600, 0.1600, 0.5600)
+                double3 xformOp:translate = (0.0000, 0.0000, 0.4400)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
                 uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
             }
@@ -141,15 +359,19 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.00000, 0.00000, 0.45500)
+            quatf xformOp:orient = (1.00000, 0.00000, 0.00000, 0.00000)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 2.0000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
-                double3 xformOp:scale = (0.1300, 0.1300, 0.3500)
-                double3 xformOp:translate = (0.0000, 0.0000, 0.1750)
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:scale = (0.1250, 0.1250, 0.5600)
+                double3 xformOp:translate = (0.0000, 0.0000, 0.2800)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
                 uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
             }
@@ -159,15 +381,30 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.00000, 0.00000, 0.73000)
+            quatf xformOp:orient = (1.00000, 0.00000, 0.00000, 0.00000)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 1.5000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
-                double3 xformOp:scale = (0.1000, 0.1000, 0.3200)
-                double3 xformOp:translate = (0.0000, 0.0000, 0.1600)
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:scale = (0.1000, 0.1000, 0.5600)
+                double3 xformOp:translate = (0.0000, 0.0000, 0.2800)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+            def Cube "geom_1" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:scale = (0.1100, 0.4400, 0.0700)
+                double3 xformOp:translate = (0.0000, 0.0000, 0.5200)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
                 uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
             }
@@ -177,25 +414,107 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.00000, 0.00000, 1.29000)
+            quatf xformOp:orient = (1.00000, 0.00000, 0.00000, 0.00000)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 1.2000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
-                double3 xformOp:scale = (0.2000, 0.1600, 0.2200)
-                double3 xformOp:translate = (0.0000, 0.0000, 0.1100)
+                color3f[] primvars:displayColor = [(0.180, 0.200, 0.240)]
+                double3 xformOp:scale = (0.0700, 0.0800, 0.0400)
+                double3 xformOp:translate = (0.0000, 0.0000, 0.0200)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
                 uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
             }
-            def Cube "collision_1" (
+            def Cube "geom_1" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
-                double3 xformOp:scale = (0.1600, 0.0100, 0.1000)
-                double3 xformOp:translate = (0.1050, 0.0000, 0.1200)
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
+                double3 xformOp:scale = (0.1300, 0.2100, 0.1500)
+                double3 xformOp:translate = (0.0000, 0.0000, 0.1150)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+            def Cube "geom_2" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                color3f[] primvars:displayColor = [(0.050, 0.070, 0.110)]
+                double3 xformOp:scale = (0.0100, 0.1750, 0.0950)
+                double3 xformOp:translate = (0.0640, 0.0000, 0.1150)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+            def Cube "geom_3" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                color3f[] primvars:displayColor = [(0.060, 0.720, 0.960)]
+                double3 xformOp:scale = (0.0080, 0.0280, 0.0440)
+                double3 xformOp:translate = (0.0680, 0.0420, 0.1220)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+            def Cube "geom_4" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                color3f[] primvars:displayColor = [(0.060, 0.720, 0.960)]
+                double3 xformOp:scale = (0.0080, 0.0280, 0.0440)
+                double3 xformOp:translate = (0.0680, -0.0420, 0.1220)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+            def Cube "geom_5" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                color3f[] primvars:displayColor = [(0.060, 0.720, 0.960)]
+                double3 xformOp:scale = (0.0080, 0.0480, 0.0090)
+                double3 xformOp:translate = (0.0680, 0.0000, 0.0820)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+            def Cube "geom_6" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:scale = (0.0550, 0.0180, 0.0650)
+                double3 xformOp:translate = (0.0000, 0.1100, 0.1150)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+            def Cube "geom_7" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:scale = (0.0550, 0.0180, 0.0650)
+                double3 xformOp:translate = (0.0000, -0.1100, 0.1150)
+                quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+            }
+            def Cube "geom_8" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                double size = 1.0
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
+                double3 xformOp:scale = (0.1400, 0.1800, 0.0180)
+                double3 xformOp:translate = (0.0100, 0.0000, 0.1990)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
                 uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
             }
@@ -205,15 +524,19 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.00000, 0.00000, 1.52300)
+            quatf xformOp:orient = (1.00000, 0.00000, 0.00000, 0.00000)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.1900
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cylinder "collision_0" (
+            def Cylinder "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double radius = 0.0350
                 double height = 0.0500
                 uniform token axis = "Z"
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:translate = (0.0000, 0.0000, 0.0000)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
                 uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
@@ -224,13 +547,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.00000, 0.22000, 1.25000)
+            quatf xformOp:orient = (0.99820, 0.00000, 0.00000, 0.05996)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.6000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0700, 0.0700, 0.0500)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.0250)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -242,13 +569,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.00000, 0.22000, 1.25000)
+            quatf xformOp:orient = (0.97304, 0.01338, -0.22270, 0.05845)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.6000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0700, 0.0700, 0.2500)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.1250)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -260,13 +591,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.10796, 0.23302, 1.02489)
+            quatf xformOp:orient = (0.79465, 0.03629, -0.60410, 0.04774)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.6000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0700, 0.0700, 0.2400)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.1200)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -278,13 +613,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.33755, 0.26070, 0.96069)
+            quatf xformOp:orient = (0.89883, 0.02608, -0.43418, 0.05399)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.6000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0700, 0.0700, 0.0600)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.0300)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -296,13 +635,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.38421, 0.26633, 0.92339)
+            quatf xformOp:orient = (0.89883, 0.02608, -0.43418, 0.05399)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.6000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0700, 0.0700, 0.0500)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.0250)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -314,13 +657,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.38421, 0.26633, 0.92339)
+            quatf xformOp:orient = (0.89883, 0.02608, -0.43418, 0.05399)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.6000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0700, 0.0700, 0.0500)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.0250)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -332,13 +679,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.43087, 0.27195, 0.88610)
+            quatf xformOp:orient = (0.89883, 0.02608, -0.43418, 0.05399)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.2000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
                 double3 xformOp:scale = (0.0500, 0.1000, 0.0300)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.0150)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -350,13 +701,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.45157, 0.29661, 0.86745)
+            quatf xformOp:orient = (0.89883, 0.02608, -0.43418, 0.05399)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.0800
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0200, 0.0200, 0.1000)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.0500)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -368,13 +723,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.45684, 0.25293, 0.86745)
+            quatf xformOp:orient = (0.89883, 0.02608, -0.43418, 0.05399)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.0800
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0200, 0.0200, 0.1000)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.0500)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -386,13 +745,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.00000, -0.22000, 1.25000)
+            quatf xformOp:orient = (0.99820, 0.00000, 0.00000, -0.05996)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.6000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0700, 0.0700, 0.0500)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.0250)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -404,13 +767,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.00000, -0.22000, 1.25000)
+            quatf xformOp:orient = (0.97304, -0.01338, -0.22270, -0.05845)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.6000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0700, 0.0700, 0.2500)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.1250)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -422,13 +789,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.10796, -0.23302, 1.02489)
+            quatf xformOp:orient = (0.79465, -0.03629, -0.60410, -0.04774)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.6000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0700, 0.0700, 0.2400)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.1200)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -440,13 +811,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.33755, -0.26070, 0.96069)
+            quatf xformOp:orient = (0.89883, -0.02608, -0.43418, -0.05399)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.6000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0700, 0.0700, 0.0600)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.0300)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -458,13 +833,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.38421, -0.26633, 0.92339)
+            quatf xformOp:orient = (0.89883, -0.02608, -0.43418, -0.05399)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.6000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0700, 0.0700, 0.0500)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.0250)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -476,13 +855,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.38421, -0.26633, 0.92339)
+            quatf xformOp:orient = (0.89883, -0.02608, -0.43418, -0.05399)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.6000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0700, 0.0700, 0.0500)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.0250)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -494,13 +877,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.43087, -0.27195, 0.88610)
+            quatf xformOp:orient = (0.89883, -0.02608, -0.43418, -0.05399)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.2000
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.680, 0.720, 0.780)]
                 double3 xformOp:scale = (0.0500, 0.1000, 0.0300)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.0150)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -512,13 +899,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.45684, -0.25293, 0.86745)
+            quatf xformOp:orient = (0.89883, -0.02608, -0.43418, -0.05399)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.0800
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0200, 0.0200, 0.1000)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.0500)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -530,13 +921,17 @@ def Xform "World"
             prepend apiSchemas = ["PhysicsRigidBodyAPI", "PhysicsMassAPI"]
         )
         {
+            double3 xformOp:translate = (0.45157, -0.29661, 0.86745)
+            quatf xformOp:orient = (0.89883, -0.02608, -0.43418, -0.05399)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient"]
             float physics:mass = 0.0800
             point3f physics:centerOfMass = (0.0000, 0.0000, 0.0000)
-            def Cube "collision_0" (
+            def Cube "geom_0" (
                 prepend apiSchemas = ["PhysicsCollisionAPI"]
             )
             {
                 double size = 1.0
+                color3f[] primvars:displayColor = [(0.860, 0.880, 0.920)]
                 double3 xformOp:scale = (0.0200, 0.0200, 0.1000)
                 double3 xformOp:translate = (0.0000, 0.0000, -0.0500)
                 quatf xformOp:orient = (1.0000, 0.0000, 0.0000, 0.0000)
@@ -544,277 +939,474 @@ def Xform "World"
             }
         }
 
-        def PhysicsRevoluteJoint "wheel_L_spin"
+        def Scope "Joints"
+        {
+        def PhysicsRevoluteJoint "wheel_L_spin" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Y"]
+        )
         {
             rel physics:body0 = </World/Saschibot/base_link>
             rel physics:body1 = </World/Saschibot/wheel_L>
-            point3f physics:localPos0 = (0.0000, 0.2100, 0.0750)
+            point3f physics:localPos0 = (0.05000, 0.29800, 0.10000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Y"
+            uniform token drive:Y:physics:type = "force"
+            float drive:Y:physics:maxForce = 35.00
+            float drive:Y:physics:stiffness = 80.0
+            float drive:Y:physics:damping = 4.0
         }
 
-        def PhysicsRevoluteJoint "wheel_R_spin"
+        def PhysicsRevoluteJoint "wheel_R_spin" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Y"]
+        )
         {
             rel physics:body0 = </World/Saschibot/base_link>
             rel physics:body1 = </World/Saschibot/wheel_R>
-            point3f physics:localPos0 = (0.0000, -0.2100, 0.0750)
+            point3f physics:localPos0 = (0.05000, -0.29800, 0.10000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Y"
+            uniform token drive:Y:physics:type = "force"
+            float drive:Y:physics:maxForce = 35.00
+            float drive:Y:physics:stiffness = 80.0
+            float drive:Y:physics:damping = 4.0
         }
 
         def PhysicsFixedJoint "caster_0_fixed"
         {
             rel physics:body0 = </World/Saschibot/base_link>
             rel physics:body1 = </World/Saschibot/caster_0>
-            point3f physics:localPos0 = (0.1600, 0.1600, 0.0300)
+            point3f physics:localPos0 = (0.34500, 0.23500, 0.04000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
         }
 
         def PhysicsFixedJoint "caster_1_fixed"
         {
             rel physics:body0 = </World/Saschibot/base_link>
             rel physics:body1 = </World/Saschibot/caster_1>
-            point3f physics:localPos0 = (-0.1600, -0.1600, 0.0300)
+            point3f physics:localPos0 = (0.34500, -0.23500, 0.04000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "caster_2_fixed"
+        {
+            rel physics:body0 = </World/Saschibot/base_link>
+            rel physics:body1 = </World/Saschibot/caster_2>
+            point3f physics:localPos0 = (-0.24500, 0.23500, 0.04000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
+            point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
+        }
+
+        def PhysicsFixedJoint "caster_3_fixed"
+        {
+            rel physics:body0 = </World/Saschibot/base_link>
+            rel physics:body1 = </World/Saschibot/caster_3>
+            point3f physics:localPos0 = (-0.24500, -0.23500, 0.04000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
+            point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
         }
 
         def PhysicsFixedJoint "column_stage1_fixed"
         {
             rel physics:body0 = </World/Saschibot/base_link>
             rel physics:body1 = </World/Saschibot/column_stage1>
-            point3f physics:localPos0 = (0.0000, 0.0000, 0.0000)
+            point3f physics:localPos0 = (0.00000, 0.00000, 0.00000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
         }
 
-        def PhysicsPrismaticJoint "lift_stage2"
+        def PhysicsPrismaticJoint "lift_stage2" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Z"]
+        )
         {
             rel physics:body0 = </World/Saschibot/column_stage1>
             rel physics:body1 = </World/Saschibot/column_stage2>
-            point3f physics:localPos0 = (0.0000, 0.0000, 0.4700)
+            point3f physics:localPos0 = (0.00000, 0.00000, 0.28000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Z"
             float physics:lowerLimit = 0.0000
             float physics:upperLimit = 0.3500
+            uniform token drive:Z:physics:type = "force"
+            float drive:Z:physics:maxForce = 150.00
+            float drive:Z:physics:stiffness = 2000.0
+            float drive:Z:physics:damping = 120.0
         }
 
-        def PhysicsPrismaticJoint "lift_stage3"
+        def PhysicsPrismaticJoint "lift_stage3" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Z"]
+        )
         {
-            rel physics:body0 = </World/Saschibot/column_stage2>
+            rel physics:body0 = </World/Saschibot/column_stage1>
             rel physics:body1 = </World/Saschibot/column_stage3>
-            point3f physics:localPos0 = (0.0000, 0.0000, 0.1500)
+            point3f physics:localPos0 = (0.00000, 0.00000, 0.38000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Z"
             float physics:lowerLimit = 0.0000
             float physics:upperLimit = 0.7000
+            uniform token drive:Z:physics:type = "force"
+            float drive:Z:physics:maxForce = 150.00
+            float drive:Z:physics:stiffness = 2000.0
+            float drive:Z:physics:damping = 120.0
         }
 
         def PhysicsFixedJoint "head_fixed"
         {
             rel physics:body0 = </World/Saschibot/column_stage3>
             rel physics:body1 = </World/Saschibot/head>
-            point3f physics:localPos0 = (0.0000, 0.0000, 0.3200)
+            point3f physics:localPos0 = (0.00000, 0.00000, 0.56000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
         }
 
         def PhysicsFixedJoint "lidar_fixed"
         {
             rel physics:body0 = </World/Saschibot/head>
             rel physics:body1 = </World/Saschibot/lidar>
-            point3f physics:localPos0 = (0.0000, 0.0000, 0.2450)
+            point3f physics:localPos0 = (0.00000, 0.00000, 0.23300)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
         }
 
-        def PhysicsRevoluteJoint "left_shoulder_pan"
+        def PhysicsRevoluteJoint "left_shoulder_pan" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Z"]
+        )
         {
             rel physics:body0 = </World/Saschibot/column_stage3>
             rel physics:body1 = </World/Saschibot/left_shoulder_pan_link>
-            point3f physics:localPos0 = (0.0000, 0.2200, 0.4200)
+            point3f physics:localPos0 = (0.00000, 0.22000, 0.52000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Z"
             float physics:lowerLimit = -148.97
             float physics:upperLimit = 148.97
+            uniform token drive:Z:physics:type = "force"
+            float drive:Z:physics:maxForce = 100.00
+            float drive:Z:physics:stiffness = 80.0
+            float drive:Z:physics:damping = 4.0
         }
 
-        def PhysicsRevoluteJoint "left_shoulder_lift"
+        def PhysicsRevoluteJoint "left_shoulder_lift" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Y"]
+        )
         {
             rel physics:body0 = </World/Saschibot/left_shoulder_pan_link>
             rel physics:body1 = </World/Saschibot/left_shoulder_lift_link>
-            point3f physics:localPos0 = (0.0000, 0.0000, -0.0000)
+            point3f physics:localPos0 = (0.00000, 0.00000, -0.00000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Y"
             float physics:lowerLimit = -85.94
             float physics:upperLimit = 85.94
+            uniform token drive:Y:physics:type = "force"
+            float drive:Y:physics:maxForce = 100.00
+            float drive:Y:physics:stiffness = 80.0
+            float drive:Y:physics:damping = 4.0
         }
 
-        def PhysicsRevoluteJoint "left_elbow"
+        def PhysicsRevoluteJoint "left_elbow" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Y"]
+        )
         {
             rel physics:body0 = </World/Saschibot/left_shoulder_lift_link>
             rel physics:body1 = </World/Saschibot/left_elbow_link>
-            point3f physics:localPos0 = (0.0000, 0.0000, -0.2500)
+            point3f physics:localPos0 = (0.00000, 0.00000, -0.25000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Y"
             float physics:lowerLimit = -126.05
             float physics:upperLimit = 126.05
+            uniform token drive:Y:physics:type = "force"
+            float drive:Y:physics:maxForce = 100.00
+            float drive:Y:physics:stiffness = 80.0
+            float drive:Y:physics:damping = 4.0
         }
 
-        def PhysicsRevoluteJoint "left_wrist_pitch"
+        def PhysicsRevoluteJoint "left_wrist_pitch" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Y"]
+        )
         {
             rel physics:body0 = </World/Saschibot/left_elbow_link>
             rel physics:body1 = </World/Saschibot/left_wrist_pitch_link>
-            point3f physics:localPos0 = (0.0000, 0.0000, -0.2400)
+            point3f physics:localPos0 = (0.00000, 0.00000, -0.24000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Y"
             float physics:lowerLimit = -85.94
             float physics:upperLimit = 85.94
+            uniform token drive:Y:physics:type = "force"
+            float drive:Y:physics:maxForce = 100.00
+            float drive:Y:physics:stiffness = 80.0
+            float drive:Y:physics:damping = 4.0
         }
 
-        def PhysicsRevoluteJoint "left_wrist_roll"
+        def PhysicsRevoluteJoint "left_wrist_roll" (
+            prepend apiSchemas = ["PhysicsDriveAPI:X"]
+        )
         {
             rel physics:body0 = </World/Saschibot/left_wrist_pitch_link>
             rel physics:body1 = </World/Saschibot/left_wrist_roll_link>
-            point3f physics:localPos0 = (0.0000, 0.0000, -0.0600)
+            point3f physics:localPos0 = (0.00000, 0.00000, -0.06000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "X"
             float physics:lowerLimit = -85.94
             float physics:upperLimit = 85.94
+            uniform token drive:X:physics:type = "force"
+            float drive:X:physics:maxForce = 100.00
+            float drive:X:physics:stiffness = 80.0
+            float drive:X:physics:damping = 4.0
         }
 
-        def PhysicsRevoluteJoint "left_flange"
+        def PhysicsRevoluteJoint "left_flange" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Z"]
+        )
         {
             rel physics:body0 = </World/Saschibot/left_wrist_roll_link>
             rel physics:body1 = </World/Saschibot/left_flange_link>
-            point3f physics:localPos0 = (0.0000, 0.0000, -0.0000)
+            point3f physics:localPos0 = (0.00000, 0.00000, -0.00000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Z"
             float physics:lowerLimit = -85.94
             float physics:upperLimit = 85.94
+            uniform token drive:Z:physics:type = "force"
+            float drive:Z:physics:maxForce = 100.00
+            float drive:Z:physics:stiffness = 80.0
+            float drive:Z:physics:damping = 4.0
         }
 
         def PhysicsFixedJoint "left_palm_fixed"
         {
             rel physics:body0 = </World/Saschibot/left_flange_link>
             rel physics:body1 = </World/Saschibot/left_palm>
-            point3f physics:localPos0 = (0.0000, 0.0000, -0.0600)
+            point3f physics:localPos0 = (0.00000, 0.00000, -0.06000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
         }
 
-        def PhysicsPrismaticJoint "left_finger_l"
+        def PhysicsPrismaticJoint "left_finger_l" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Y"]
+        )
         {
             rel physics:body0 = </World/Saschibot/left_palm>
             rel physics:body1 = </World/Saschibot/left_finger_l>
-            point3f physics:localPos0 = (0.0000, 0.0420, -0.0300)
+            point3f physics:localPos0 = (0.00000, 0.04200, -0.03000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Y"
             float physics:lowerLimit = 0.0000
             float physics:upperLimit = 0.0420
+            uniform token drive:Y:physics:type = "force"
+            float drive:Y:physics:maxForce = 150.00
+            float drive:Y:physics:stiffness = 2000.0
+            float drive:Y:physics:damping = 120.0
         }
 
-        def PhysicsPrismaticJoint "left_finger_r"
+        def PhysicsPrismaticJoint "left_finger_r" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Y"]
+        )
         {
             rel physics:body0 = </World/Saschibot/left_palm>
             rel physics:body1 = </World/Saschibot/left_finger_r>
-            point3f physics:localPos0 = (0.0000, -0.0420, -0.0300)
+            point3f physics:localPos0 = (0.00000, -0.04200, -0.03000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Y"
             float physics:lowerLimit = 0.0000
             float physics:upperLimit = 0.0420
+            uniform token drive:Y:physics:type = "force"
+            float drive:Y:physics:maxForce = 150.00
+            float drive:Y:physics:stiffness = 2000.0
+            float drive:Y:physics:damping = 120.0
         }
 
-        def PhysicsRevoluteJoint "right_shoulder_pan"
+        def PhysicsRevoluteJoint "right_shoulder_pan" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Z"]
+        )
         {
             rel physics:body0 = </World/Saschibot/column_stage3>
             rel physics:body1 = </World/Saschibot/right_shoulder_pan_link>
-            point3f physics:localPos0 = (0.0000, -0.2200, 0.4200)
+            point3f physics:localPos0 = (0.00000, -0.22000, 0.52000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Z"
             float physics:lowerLimit = -148.97
             float physics:upperLimit = 148.97
+            uniform token drive:Z:physics:type = "force"
+            float drive:Z:physics:maxForce = 100.00
+            float drive:Z:physics:stiffness = 80.0
+            float drive:Z:physics:damping = 4.0
         }
 
-        def PhysicsRevoluteJoint "right_shoulder_lift"
+        def PhysicsRevoluteJoint "right_shoulder_lift" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Y"]
+        )
         {
             rel physics:body0 = </World/Saschibot/right_shoulder_pan_link>
             rel physics:body1 = </World/Saschibot/right_shoulder_lift_link>
-            point3f physics:localPos0 = (0.0000, 0.0000, -0.0000)
+            point3f physics:localPos0 = (0.00000, 0.00000, -0.00000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Y"
             float physics:lowerLimit = -85.94
             float physics:upperLimit = 85.94
+            uniform token drive:Y:physics:type = "force"
+            float drive:Y:physics:maxForce = 100.00
+            float drive:Y:physics:stiffness = 80.0
+            float drive:Y:physics:damping = 4.0
         }
 
-        def PhysicsRevoluteJoint "right_elbow"
+        def PhysicsRevoluteJoint "right_elbow" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Y"]
+        )
         {
             rel physics:body0 = </World/Saschibot/right_shoulder_lift_link>
             rel physics:body1 = </World/Saschibot/right_elbow_link>
-            point3f physics:localPos0 = (0.0000, 0.0000, -0.2500)
+            point3f physics:localPos0 = (0.00000, 0.00000, -0.25000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Y"
             float physics:lowerLimit = -126.05
             float physics:upperLimit = 126.05
+            uniform token drive:Y:physics:type = "force"
+            float drive:Y:physics:maxForce = 100.00
+            float drive:Y:physics:stiffness = 80.0
+            float drive:Y:physics:damping = 4.0
         }
 
-        def PhysicsRevoluteJoint "right_wrist_pitch"
+        def PhysicsRevoluteJoint "right_wrist_pitch" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Y"]
+        )
         {
             rel physics:body0 = </World/Saschibot/right_elbow_link>
             rel physics:body1 = </World/Saschibot/right_wrist_pitch_link>
-            point3f physics:localPos0 = (0.0000, 0.0000, -0.2400)
+            point3f physics:localPos0 = (0.00000, 0.00000, -0.24000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Y"
             float physics:lowerLimit = -85.94
             float physics:upperLimit = 85.94
+            uniform token drive:Y:physics:type = "force"
+            float drive:Y:physics:maxForce = 100.00
+            float drive:Y:physics:stiffness = 80.0
+            float drive:Y:physics:damping = 4.0
         }
 
-        def PhysicsRevoluteJoint "right_wrist_roll"
+        def PhysicsRevoluteJoint "right_wrist_roll" (
+            prepend apiSchemas = ["PhysicsDriveAPI:X"]
+        )
         {
             rel physics:body0 = </World/Saschibot/right_wrist_pitch_link>
             rel physics:body1 = </World/Saschibot/right_wrist_roll_link>
-            point3f physics:localPos0 = (0.0000, 0.0000, -0.0600)
+            point3f physics:localPos0 = (0.00000, 0.00000, -0.06000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "X"
             float physics:lowerLimit = -85.94
             float physics:upperLimit = 85.94
+            uniform token drive:X:physics:type = "force"
+            float drive:X:physics:maxForce = 100.00
+            float drive:X:physics:stiffness = 80.0
+            float drive:X:physics:damping = 4.0
         }
 
-        def PhysicsRevoluteJoint "right_flange"
+        def PhysicsRevoluteJoint "right_flange" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Z"]
+        )
         {
             rel physics:body0 = </World/Saschibot/right_wrist_roll_link>
             rel physics:body1 = </World/Saschibot/right_flange_link>
-            point3f physics:localPos0 = (0.0000, 0.0000, -0.0000)
+            point3f physics:localPos0 = (0.00000, 0.00000, -0.00000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Z"
             float physics:lowerLimit = -85.94
             float physics:upperLimit = 85.94
+            uniform token drive:Z:physics:type = "force"
+            float drive:Z:physics:maxForce = 100.00
+            float drive:Z:physics:stiffness = 80.0
+            float drive:Z:physics:damping = 4.0
         }
 
         def PhysicsFixedJoint "right_palm_fixed"
         {
             rel physics:body0 = </World/Saschibot/right_flange_link>
             rel physics:body1 = </World/Saschibot/right_palm>
-            point3f physics:localPos0 = (0.0000, 0.0000, -0.0600)
+            point3f physics:localPos0 = (0.00000, 0.00000, -0.06000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
         }
 
-        def PhysicsPrismaticJoint "right_finger_l"
+        def PhysicsPrismaticJoint "right_finger_l" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Y"]
+        )
         {
             rel physics:body0 = </World/Saschibot/right_palm>
             rel physics:body1 = </World/Saschibot/right_finger_l>
-            point3f physics:localPos0 = (0.0000, 0.0420, -0.0300)
+            point3f physics:localPos0 = (0.00000, 0.04200, -0.03000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Y"
             float physics:lowerLimit = 0.0000
             float physics:upperLimit = 0.0420
+            uniform token drive:Y:physics:type = "force"
+            float drive:Y:physics:maxForce = 150.00
+            float drive:Y:physics:stiffness = 2000.0
+            float drive:Y:physics:damping = 120.0
         }
 
-        def PhysicsPrismaticJoint "right_finger_r"
+        def PhysicsPrismaticJoint "right_finger_r" (
+            prepend apiSchemas = ["PhysicsDriveAPI:Y"]
+        )
         {
             rel physics:body0 = </World/Saschibot/right_palm>
             rel physics:body1 = </World/Saschibot/right_finger_r>
-            point3f physics:localPos0 = (0.0000, -0.0420, -0.0300)
+            point3f physics:localPos0 = (0.00000, -0.04200, -0.03000)
+            quatf physics:localRot0 = (1.00000, 0.00000, 0.00000, 0.00000)
             point3f physics:localPos1 = (0, 0, 0)
+            quatf physics:localRot1 = (1, 0, 0, 0)
             uniform token physics:axis = "Y"
             float physics:lowerLimit = 0.0000
             float physics:upperLimit = 0.0420
+            uniform token drive:Y:physics:type = "force"
+            float drive:Y:physics:maxForce = 150.00
+            float drive:Y:physics:stiffness = 2000.0
+            float drive:Y:physics:damping = 120.0
         }
 
+        }
     }
 }
