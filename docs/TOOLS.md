@@ -1,6 +1,6 @@
 # isaac-mcp Tool Reference
 
-18 tools: 10 simulation lifecycle + 5 AI workflow assistants + 3 Prefab cards.
+21 tools: 10 simulation lifecycle + 3 robotics pipeline / Active Inference tools + 5 AI workflow assistants + 3 Prefab cards.
 
 **Note:** All tools require NVIDIA Isaac Sim to be installed (see SETUP.md). The server auto-detects Isaac Sim's Python interpreter.
 
@@ -367,3 +367,53 @@ Rich in-chat cards for Prefab-capable MCP clients, registered from
 
 - `isaac://depot` (resource) — scene depot registry snapshot (JSON).
 - `sim_quickstart(goal)` (prompt) — load → start → control → stop starter text.
+
+---
+
+## Robotics Pipeline & Active Inference Tools (19-21)
+
+### convert_urdf_to_usd
+
+**Description:** Pure-Python URDF to OpenUSD (`.usda`) converter computing full rest-pose Forward Kinematics (`xformOp:translate`, `xformOp:orient`), `PhysicsArticulationRootAPI`, `PhysicsRigidBodyAPI`, `PhysicsMassAPI`, `PhysicsCollisionAPI`, and `PhysicsDriveAPI` (`stiffness`/`damping`), automatically registering the resulting stage in `scenes/.depot/registry.json`.
+
+**Inputs:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| urdf_path | str | Yes | Local path to `.urdf` file (e.g. `saschirob.urdf` or `nori_a3.urdf`) |
+| name | str | Yes | Friendly scene name for the depot |
+
+**Examples:**
+```python
+convert_urdf_to_usd("D:/Dev/repos/rust-saschirob-mcp/models/saschirob.urdf", "saschibot_sim")
+convert_urdf_to_usd("D:/Dev/repos/norirobotics-mcp/assets/nori_description/urdf/nori_a3.urdf", "nori_a3_sim")
+```
+
+---
+
+### run_active_inference
+
+**Description:** Runs Laplace Active Inference (Variational Free Energy minimization) on `saschibot` (`saschibot_sim`), `nori_a3` (`nori_a3_sim`), or `supervisor`, and optionally streams `joint_targets` directly into a running Isaac Sim `job_id`'s `control.json`.
+
+**Inputs:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| robot | str | No | `'saschibot'`, `'nori_a3'`, or `'supervisor'` (default: `'saschibot'`) |
+| task | str | No | Manipulation or navigation task name (default: `'bimanual_reach'`) |
+| cycles | int | No | Number of 50 Hz control cycles (default: `50`) |
+| job_id | str | No | Optional active Isaac Sim `job_id` to receive `joint_targets` |
+
+---
+
+### isaac_pipeline
+
+**Description:** Orchestrates the 10-stage CAD -> OpenUSD -> Isaac Lab / Newton -> ROS 2 -> Active Inference pipeline and SOTA model families (`gr00t_n1_5`, `pi0_5_fast`, `smolvla`, `rsl_rl_ppo`, `newton_warp`).
+
+**Inputs:**
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| operation | str | No | `'status'`, `'list_models'`, or `'run_stage'` |
+| stage | str | No | Pipeline stage ID (`01_cad_to_usd` .. `10_mujoco_closed_loop`) |
+| robot | str | No | `'saschibot'` or `'nori_a3'` |
+| model_family | str | No | `'gr00t_n1_5'`, `'pi0_5_fast'`, `'smolvla'`, `'rsl_rl_ppo'`, or `'newton_warp'` |
+| num_envs | int | No | Parallel GPU environments (default: `4096`) |
+| dry_run | bool | No | Preview execution command without launching (default: `True`) |
