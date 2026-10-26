@@ -57,6 +57,9 @@ uv run python -m isaac_mcp
 | 16 | `show_sim_status_card` | Prefab card: Isaac/GPU/depot status |
 | 17 | `show_scenes_card` | Prefab card: scene depot contents |
 | 18 | `show_jobs_card` | Prefab card: active + completed jobs |
+| 19 | `convert_urdf_to_usd` | Pure-Python URDF -> simulation-ready OpenUSD (`.usda`) converter with full FK & PhysX/Newton schemas |
+| 20 | `run_active_inference` | Laplace Active Inference (VFE/EFE) controller for `saschibot` and `nori_a3` with live job streaming |
+| 21 | `isaac_pipeline` | 10-stage CAD -> OpenUSD -> Isaac Lab / Newton -> ROS 2 -> Active Inference pipeline & SOTA VLA models |
 
 [Full tool reference →](docs/TOOLS.md)
 
@@ -91,6 +94,8 @@ MCP Client  ──►  isaac-mcp (FastMCP 3.4)
 | `docs/DEVELOPMENT.md` | Setup, commands, architecture, conventions |
 | `docs/TROUBLESHOOTING.md` | Sim/startup/dashboard/CI failure table |
 | `docs/ISAAC_VS_OTHERS.md` | Comparison with MuJoCo, Gazebo, and other physics backends |
+| `pipeline/README.md` | 10-stage CAD -> OpenUSD -> Isaac Lab (RSL-RL / GR00T N1.5 / Newton) -> ROS 2 -> Active Inference pipeline |
+| `docs/gemini_distillations/INDEX.md` | Distilled 17-part robotics & cognitive architecture synthesis |
 
 ## Ports
 
