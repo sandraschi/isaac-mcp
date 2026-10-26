@@ -52,6 +52,10 @@ def main() -> None:
     sim_app = None
     try:
         # --- SimulationApp must exist before any other Isaac import ---
+        import os
+
+        os.environ.setdefault("OMNI_KIT_ACCEPT_EULA", "YES")
+        os.environ.setdefault("ACCEPT_EULA", "Y")
         try:
             from isaacsim import SimulationApp  # Isaac Sim 4.x/5.x pip + binary
         except ImportError:

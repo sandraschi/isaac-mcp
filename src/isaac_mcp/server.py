@@ -77,7 +77,7 @@ def _isaac_version() -> str | None:
         return None
     try:
         r = subprocess.run(
-            [str(py), "-c", "import omni.isaac.core; print(omni.isaac.core.__version__)"],
+            [str(py), "-c", "import importlib.metadata as m; print(m.version('isaacsim'))"],
             capture_output=True,
             text=True,
             timeout=30,
@@ -330,7 +330,12 @@ def start_sim(scene_name: str, headless: bool = True) -> dict:
     # Isaac's first launch (extension pull) can write a LOT.
     log_path = job_dir / "runner.log"
     log_fh = open(log_path, "w", encoding="utf-8")  # noqa: SIM115 - owned by child
-    proc = subprocess.Popen(cmd, stdout=log_fh, stderr=subprocess.STDOUT)
+    creationflags = (
+        getattr(subprocess, "CREATE_NEW_PROCESS_GROUP", 0) if sys.platform == "win32" else 0
+    )
+    proc = subprocess.Popen(
+        cmd, stdout=log_fh, stderr=subprocess.STDOUT, creationflags=creationflags
+    )
 
     _jobs[job_id] = {
         "process": proc,
@@ -1065,6 +1070,142 @@ try:
     register_prefab_cards(mcp)
 except Exception as prefab_exc:
     logger.info("Prefab cards not loaded: %s", prefab_exc)
+
+
+@mcp.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
+def convert_urdf_to_usd(urdf_path: str, name: str) -> dict:
+    """Convert a URDF file into a simulation-ready OpenUSD (.usda) stage with full FK and PhysX/Newton schemas, and register it in the depot.
+
+    urdf_path: path to .urdf file (e.g. saschirob.urdf or nori_a3.urdf)
+    name: friendly scene name for the depot
+
+    ## Return Format
+    Dict with success, name, path, size_kb, links, joints
+
+    ## Examples
+    ```python
+    convert_urdf_to_usd("D:/Dev/repos/rust-saschirob-mcp/models/saschirob.urdf", "saschibot_sim")
+    ```
+    """
+    from isaac_mcp.robotics_pipeline import convert_urdf_to_usda
+
+    res = convert_urdf_to_usda(urdf_path=urdf_path, scene_name=name, scenes_dir=SCENES_DIR)
+    if not res.get("success"):
+        return _fail(res.get("error", "URDF conversion failed"))
+
+    depot = _load_depot()
+    depot[name] = {
+        "uri": str(urdf_path),
+        "path": res["path"],
+        "size_kb": res["size_kb"],
+        "format": ".usda",
+        "robot": res["robot_name"],
+        "links": res["links"],
+        "joints": res["joints"],
+    }
+    _save_depot(depot)
+    return _ok(
+        res, f"Converted URDF to '{name}.usda' ({res['links']} links, {res['joints']} joints)."
+    )
+
+
+@mcp.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": False,
+        "openWorldHint": False,
+    }
+)
+def run_active_inference(
+    robot: str = "saschibot",
+    task: str = "bimanual_reach",
+    cycles: int = 50,
+    job_id: str = "",
+) -> dict:
+    """Run the Laplace Active Inference controller (Variational Free Energy minimization) on saschibot or nori_a3, optionally streaming setpoints to a running Isaac Sim job_id.
+
+    robot: 'saschibot', 'nori_a3', or 'supervisor'
+    task: manipulation or navigation task name
+    cycles: number of 50 Hz control cycles
+    job_id: optional active Isaac Sim job_id to receive joint_targets via control.json
+
+    ## Return Format
+    Dict with success, robot, usd_scene, joint_targets, streamed_to_job, log_tail
+
+    ## Examples
+    ```python
+    run_active_inference(robot="saschibot", task="bimanual_reach")
+    run_active_inference(robot="nori_a3", task="countertop_grasp")
+    ```
+    """
+    from isaac_mcp.robotics_pipeline import run_active_inference_twin
+
+    res = run_active_inference_twin(
+        robot=robot,
+        task=task,
+        cycles=cycles,
+        job_id=job_id or None,
+        jobs_dir=JOBS_DIR,
+    )
+    if not res.get("success"):
+        return _fail(res.get("error", "Active Inference execution failed"))
+    return _ok(res, f"Active Inference completed for '{robot}' ({task}).")
+
+
+@mcp.tool(
+    annotations={
+        "readOnlyHint": False,
+        "destructiveHint": False,
+        "idempotentHint": True,
+        "openWorldHint": False,
+    }
+)
+def isaac_pipeline(
+    operation: str = "status",
+    stage: str = "all",
+    robot: str = "saschibot",
+    model_family: str = "gr00t_n1_5",
+    num_envs: int = 4096,
+    dry_run: bool = True,
+) -> dict:
+    """Manage and execute the 10-stage CAD -> OpenUSD -> Isaac Lab / Newton -> ROS 2 -> Active Inference pipeline and SOTA model families (GR00T N1.5, pi0.5-FAST, SmolVLA, RSL-RL PPO, Newton-Warp).
+
+    operation: 'status', 'list_models', or 'run_stage'
+    stage: pipeline stage id (e.g. '03_isaac_lab_runner', '09_saschibot_active_inference')
+    robot: 'saschibot' or 'nori_a3'
+    model_family: 'gr00t_n1_5', 'pi0_5_fast', 'smolvla', 'rsl_rl_ppo', or 'newton_warp'
+
+    ## Return Format
+    Dict with pipeline stages, SOTA model families, or stage execution result
+
+    ## Examples
+    ```python
+    isaac_pipeline(operation="status")
+    isaac_pipeline(operation="list_models")
+    isaac_pipeline(operation="run_stage", stage="09_saschibot_active_inference", dry_run=False)
+    ```
+    """
+    from isaac_mcp.robotics_pipeline import inspect_or_run_pipeline
+
+    res = inspect_or_run_pipeline(
+        operation=operation,
+        stage=stage,
+        robot=robot,
+        model_family=model_family,
+        num_envs=num_envs,
+        dry_run=dry_run,
+    )
+    if not res.get("success"):
+        return _fail(res.get("error", "Pipeline operation failed"))
+    return _ok(res, f"Pipeline operation '{operation}' succeeded.")
 
 
 def main():
