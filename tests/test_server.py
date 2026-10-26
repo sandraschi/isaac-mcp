@@ -193,3 +193,50 @@ class TestAiTools:
 
         result = await analyze_sim_logs(job_id="bad_id", ctx=None)
         assert result["success"] is True  # No errors = success
+
+
+class TestRoboticsPipelineTools:
+    def test_convert_urdf_to_usd_success(self, empty_depot, tmp_path):
+        from isaac_mcp.server import convert_urdf_to_usd, list_scenes
+
+        urdf_file = tmp_path / "mini_bot.urdf"
+        urdf_file.write_text(
+            '<robot name="mini_bot">'
+            '<link name="base_link"><inertial><mass value="1.0"/></inertial></link>'
+            '<link name="arm_link"><inertial><mass value="0.5"/></inertial></link>'
+            '<joint name="j1" type="revolute">'
+            '<parent link="base_link"/><child link="arm_link"/>'
+            '<origin xyz="0 0 0.2"/><axis xyz="0 0 1"/>'
+            "</joint></robot>",
+            encoding="utf-8",
+        )
+        res = convert_urdf_to_usd(urdf_path=str(urdf_file), name="mini_bot_sim")
+        assert res["success"] is True
+        assert res["links"] == 2
+        assert res["joints"] == 1
+        scenes = list_scenes()
+        assert "mini_bot_sim" in scenes["scenes"]
+
+    def test_isaac_pipeline_status_and_models(self):
+        from isaac_mcp.server import isaac_pipeline
+
+        status = isaac_pipeline(operation="status")
+        assert status["success"] is True
+        assert len(status["stages"]) == 10
+        assert "gr00t_n1_5" in status["sota_model_families"]
+        assert "pi0_5_fast" in status["sota_model_families"]
+        assert "smolvla" in status["sota_model_families"]
+        assert "newton_warp" in status["sota_model_families"]
+
+    def test_run_active_inference_saschibot_and_nori(self, empty_depot):
+        from isaac_mcp.server import run_active_inference
+
+        res_s = run_active_inference(robot="saschibot", task="bimanual_reach", cycles=10)
+        assert res_s["success"] is True
+        assert res_s["usd_scene"] == "saschibot_sim"
+        assert "lift_stage3" in res_s["joint_targets"]
+
+        res_n = run_active_inference(robot="nori_a3", task="countertop_grasp", cycles=10)
+        assert res_n["success"] is True
+        assert res_n["usd_scene"] == "nori_a3_sim"
+        assert "left_arm_joint1" in res_n["joint_targets"]
